@@ -39,14 +39,14 @@ teardown() {
 
 @test "git_worktree_cmd.sh lists main worktree path" {
 	cd "$TEST_REPO"
-	run "$CMD"
+	run "$CMD" list
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "$TEST_REPO"
 }
 
 @test "git_worktree_cmd.sh lists secondary worktree" {
 	cd "$TEST_REPO"
-	run "$CMD"
+	run "$CMD" list
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "$TEST_REPO-wt"
 }
