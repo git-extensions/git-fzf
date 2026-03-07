@@ -4,13 +4,16 @@
 
 set -euo pipefail
 
-# Force ANSI color output even when stdout is not a TTY (e.g. piped into fzf)
-export CLICOLOR_FORCE=1
-
 # Icon used in fzf footer/header titles
 _fzf_icon=" "
 # Separator used in fzf display templates
 _fzf_split="·"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	_fzf_open="open"
+else
+	_fzf_open="xdg-open"
+fi
 
 # _git_fzf_options()
 #
@@ -77,42 +80,6 @@ _git_fzf_options() {
 	fi
 }
 
-# _git_expand_path()
-#
-# Expand a leading ~ to $HOME in a path.
-#
-# PARAMETERS:
-#   $1 - Path to expand (absolute or ~/…)
-#
-# RETURNS:
-#   Expanded path printed to stdout.
-#
-# NOTE:
-#   Only ~/… form is handled. Bare ~username is not supported and will
-#   produce an incorrect result. Worktree paths are always absolute or ~/…
-#   so this is not a concern in practice.
-#
-_git_expand_path() {
-	printf '%s' "${1/#~/$HOME}"
-}
-
-# _git_open()
-#
-# Open a path in the system file manager, expanding a leading ~ to $HOME.
-#
-# PARAMETERS:
-#   $1 - Path to open (absolute or ~/…)
-#
-_git_open() {
-	local path
-	path=$(_git_expand_path "$1")
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		open "$path"
-	else
-		xdg-open "$path"
-	fi
-}
-
 # _git_is_repo()
 #
 # Check if the current directory is inside a git repository (work tree or bare).
@@ -124,61 +91,15 @@ _git_is_repo() {
 	git rev-parse --git-dir &>/dev/null
 }
 
-# _git_root()
+# Resolve the git repository root directory
 #
-# Get the root directory of the current git repository.
+# Writes the result into the nameref; returns 1 and logs an error on failure.
 #
-# RETURNS:
-#   Absolute path to the repository root, or empty string on error.
-#   For bare repositories, falls back to --absolute-git-dir (the .git directory itself).
-#
-_git_root() {
+# Usage: _git_repo_path git_dir_ref
+_git_repo_path() {
 	local root
 	root=$(git rev-parse --show-toplevel 2>/dev/null) ||
 		root=$(git rev-parse --absolute-git-dir 2>/dev/null) ||
 		return 0
 	printf '%s\n' "$root"
 }
-
-# _git_get_repo()
-#
-# Extract owner/repo from the git remote origin URL for a given directory.
-# Falls back to basename of the directory if origin is not configured.
-#
-# PARAMETERS:
-#   $1 - directory path
-#
-# RETURNS:
-#   owner/repo string printed to stdout.
-#
-_git_get_repo() {
-	local url
-	url=$(git -C "$1" remote get-url origin 2>/dev/null) || {
-		basename "$1"
-		return
-	}
-	url="${url%.git}"
-	if [[ "$url" =~ [:/]([^/:]+/[^/:]+)$ ]]; then
-		printf '%s' "${BASH_REMATCH[1]}"
-	else
-		basename "$1"
-	fi
-}
-
-# ------------------------------------------------------------------------------
-# Direct Execution Support
-# ------------------------------------------------------------------------------
-# When run directly (not sourced), dispatch to the appropriate function.
-# ------------------------------------------------------------------------------
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-	case "${1:-}" in
-	open)
-		if [[ -z "${2:-}" ]]; then
-			gum log --level error "open requires a path"
-			exit 1
-		fi
-		_git_open "$2"
-		;;
-	*) git "$@" ;;
-	esac
-fi
