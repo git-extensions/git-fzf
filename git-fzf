@@ -22,6 +22,9 @@ _check_dependencies() {
 	if ! command -v gum &>/dev/null; then
 		missing+=("gum     — https://github.com/charmbracelet/gum")
 	fi
+	if ! command -v awk &>/dev/null; then
+		missing+=("awk     — install gawk or nawk via your package manager")
+	fi
 
 	if [[ ${#missing[@]} -gt 0 ]]; then
 		echo "git-fzf: missing required dependencies:" >&2
@@ -143,7 +146,7 @@ main() {
 	fi
 
 	# Dispatch to command with remaining args
-	case $command in
+	case "$command" in
 	worktree)
 		_git_worktree_list "${command_args[@]}"
 		;;

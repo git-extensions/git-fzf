@@ -69,7 +69,7 @@ _git_worktree_list() {
 
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split set by sourced git_core.sh
 	# Interactive worktree browser
-	echo "$git_worktree_list" | fzf "${_fzf_options[@]}" \
+	printf '%s\n' "$git_worktree_list" | fzf "${_fzf_options[@]}" \
 		--accept-nth 1 --with-nth 1.. \
 		--footer "$_fzf_icon Git Worktrees $_fzf_split $git_root" \
 		--preview-label " Keyboard Shortcuts " \

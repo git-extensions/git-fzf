@@ -112,7 +112,10 @@ _git_is_repo() {
 #
 _git_root() {
 	local root
-	root=$(git rev-parse --show-toplevel 2>/dev/null) || { echo ""; return; }
+	root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+		echo ""
+		return
+	}
 	echo "${root/#"$HOME"/\~}"
 }
 

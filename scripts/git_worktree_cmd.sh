@@ -45,7 +45,7 @@ _git_worktree_list() {
 	worktrees=$(git worktree list --porcelain 2>/dev/null) || return 0
 	[[ -z "$worktrees" ]] && return 0
 
-	local path="" sha="" branch="" msg="" detached=0
+	local path="" sha="" branch="" msg="" detached=0 bare=0
 
 	while IFS= read -r line || [[ -n "$line" ]]; do
 		if [[ "$line" == worktree\ * ]]; then
@@ -58,18 +58,22 @@ _git_worktree_list() {
 			branch="${branch#refs/heads/}"
 		elif [[ "$line" == "detached" ]]; then
 			detached=1
+		elif [[ "$line" == "bare" ]]; then
+			bare=1
 		elif [[ -z "$line" && -n "$path" ]]; then
 			# End of block — emit row
 			[[ $detached -eq 1 ]] && branch="(detached)"
+			[[ $bare -eq 1 ]] && branch="(bare)"
 			msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
 			_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
-			path=""; sha=""; branch=""; msg=""; detached=0
+			path=""; sha=""; branch=""; msg=""; detached=0; bare=0
 		fi
 	done <<<"$worktrees"
 
 	# Emit last block if file did not end with a blank line
 	if [[ -n "$path" ]]; then
 		[[ $detached -eq 1 ]] && branch="(detached)"
+		[[ $bare -eq 1 ]] && branch="(bare)"
 		msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
 		_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
 	fi
@@ -96,7 +100,7 @@ _git_worktree_list_cmd() {
 
 	{
 		printf "PATH\tBRANCH\tCOMMIT\tMESSAGE\n"
-		echo "$raw"
+		printf '%s\n' "$raw"
 	} |
 		awk -v styles="bold,status,faint,faint" \
 			-v max_widths="0,35,0,0" \
