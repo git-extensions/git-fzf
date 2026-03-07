@@ -77,16 +77,16 @@ AWK_SCRIPT="$SCRIPTS_DIR/git_render.awk"
 # HOME substitution
 # ---------------------------------------------------------------------------
 
-@test "HOME prefix substituted with ~/ in column 1 data" {
+@test "absolute path in column 1 is kept as-is" {
 	result=$(printf 'PATH\tBRANCH\n/home/alice/repo\tmain\n' \
-		| awk -v styles="normal,normal" -v max_widths="0,0" -v home="/home/alice" -f "$AWK_SCRIPT")
-	printf '%s\n' "$result" | grep -q "~/repo"
+		| awk -v styles="normal,normal" -v max_widths="0,0" -f "$AWK_SCRIPT")
+	printf '%s\n' "$result" | grep -q "/home/alice/repo"
 }
 
-@test "HOME exact match substituted with ~ in column 1" {
+@test "HOME-matching absolute path in column 1 is kept as-is" {
 	result=$(printf 'PATH\tBRANCH\n/home/alice\tmain\n' \
-		| awk -v styles="normal,normal" -v max_widths="0,0" -v home="/home/alice" -f "$AWK_SCRIPT")
-	printf '%s\n' "$result" | grep -q "^~  "
+		| awk -v styles="normal,normal" -v max_widths="0,0" -f "$AWK_SCRIPT")
+	printf '%s\n' "$result" | grep -q "^/home/alice"
 }
 
 @test "HOME sibling directory is NOT substituted with ~/" {

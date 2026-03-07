@@ -129,7 +129,7 @@ _git_is_repo() {
 # Get the root directory of the current git repository.
 #
 # RETURNS:
-#   Path to the repository root with $HOME replaced by ~, or empty string on error.
+#   Absolute path to the repository root, or empty string on error.
 #   For bare repositories, falls back to --absolute-git-dir (the .git directory itself).
 #
 _git_root() {
@@ -137,11 +137,7 @@ _git_root() {
 	root=$(git rev-parse --show-toplevel 2>/dev/null) ||
 		root=$(git rev-parse --absolute-git-dir 2>/dev/null) ||
 		return 0
-	if [[ "$root" == "$HOME" || "$root" == "$HOME/"* ]]; then
-		printf '%s\n' "~${root#"$HOME"}"
-	else
-		printf '%s\n' "$root"
-	fi
+	printf '%s\n' "$root"
 }
 
 # _git_get_repo()
