@@ -35,7 +35,7 @@ _fzf_split="·"
 #   Sets _fzf_options array with merged options
 #
 # ENVIRONMENT:
-#   GIT_FZF_FLAGS - Space-separated string of user fzf flags (set by main entry point)
+#   GIT_FZF_FLAGS - Shell-quoted space-separated tokens (set by main entry point via printf '%q')
 #   GIT_FZF_<COMMAND>_OPTS - Per-command fzf options (e.g., GIT_FZF_WORKTREE_OPTS)
 #
 # EXAMPLE:
@@ -94,13 +94,13 @@ _git_opener() {
 
 # _git_is_repo()
 #
-# Check if the current directory is inside a git work tree.
+# Check if the current directory is inside a git repository (work tree or bare).
 #
 # RETURNS:
 #   0 if inside a git repository, 1 otherwise.
 #
 _git_is_repo() {
-	[[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" == "true" ]]
+	git rev-parse --git-dir &>/dev/null
 }
 
 # _git_root()

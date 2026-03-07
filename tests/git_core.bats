@@ -29,6 +29,17 @@ teardown() {
 	[ "$status" -eq 0 ]
 }
 
+@test "_git_is_repo returns 0 inside a bare repo" {
+	BARE_REPO=$(mktemp -d)
+	rmdir "$BARE_REPO"
+	git clone --bare "$TEST_REPO" "$BARE_REPO"
+	cd "$BARE_REPO"
+	source "$SCRIPTS_DIR/git_core.sh"
+	run _git_is_repo
+	rm -rf "$BARE_REPO"
+	[ "$status" -eq 0 ]
+}
+
 @test "_git_is_repo returns 1 outside a git repo" {
 	cd "$TEST_OUTSIDE"
 	source "$SCRIPTS_DIR/git_core.sh"

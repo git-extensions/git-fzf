@@ -4,6 +4,7 @@
 #   { printf "COL1\tCOL2\n"; printf '%s\n' "$data"; } | \
 #       awk -v styles="bold,status,faint,faint" \
 #           -v max_widths="0,35,0,0" \
+#           -v home="$HOME" \
 #           -f git_render.awk
 #
 # PARAMETERS:

@@ -18,7 +18,7 @@ setup() {
 }
 
 teardown() {
-	rm -rf "$TEST_REPO" "$TEST_REPO-wt"
+	rm -rf "$TEST_REPO" "$TEST_REPO-wt" "$TEST_REPO-detached"
 }
 
 # ---------------------------------------------------------------------------
@@ -121,7 +121,6 @@ teardown() {
 	git -C "$TEST_REPO" worktree add --detach "$TEST_REPO-detached"
 	cd "$TEST_REPO"
 	run "$CMD" list
-	rm -rf "$TEST_REPO-detached"
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "(detached)"
 }
