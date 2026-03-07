@@ -144,6 +144,31 @@ _git_root() {
 	fi
 }
 
+# _git_get_repo()
+#
+# Extract owner/repo from the git remote origin URL for a given directory.
+# Falls back to basename of the directory if origin is not configured.
+#
+# PARAMETERS:
+#   $1 - directory path
+#
+# RETURNS:
+#   owner/repo string printed to stdout.
+#
+_git_get_repo() {
+	local url
+	url=$(git -C "$1" remote get-url origin 2>/dev/null) || {
+		basename "$1"
+		return
+	}
+	url="${url%.git}"
+	if [[ "$url" =~ [:/]([^/:]+/[^/:]+)$ ]]; then
+		printf '%s' "${BASH_REMATCH[1]}"
+	else
+		basename "$1"
+	fi
+}
+
 # ------------------------------------------------------------------------------
 # Direct Execution Support
 # ------------------------------------------------------------------------------

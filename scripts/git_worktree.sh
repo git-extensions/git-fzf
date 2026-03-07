@@ -55,6 +55,9 @@ _git_worktree_list() {
 	local git_worktree_cmd
 	git_worktree_cmd="$_git_worktree_source_dir/git_worktree_cmd.sh"
 
+	local git_tmux_cmd
+	git_tmux_cmd="$_git_worktree_source_dir/git_tmux.sh"
+
 	local git_worktree_list
 	git_worktree_list=$("$git_worktree_cmd")
 
@@ -69,9 +72,18 @@ _git_worktree_list() {
 	# Build fzf options with user-provided flags
 	_git_fzf_options "WORKTREE"
 
+	# Register tmux bindings only when running inside a tmux session
+	local tmux_binds=()
+	if [[ -n "${TMUX:-}" ]]; then
+		tmux_binds=(
+			--bind "alt-W:execute($git_tmux_cmd new-window {1})"
+			--bind "alt-S:execute-silent($git_tmux_cmd new-session {1})"
+		)
+	fi
+
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split set by sourced git_core.sh
 	# Interactive worktree browser
-	echo "$git_worktree_list" | fzf "${_fzf_options[@]}" \
+	echo "$git_worktree_list" | fzf "${_fzf_options[@]}" "${tmux_binds[@]}" \
 		--accept-nth 1 \
 		--footer "$_fzf_icon Git Worktrees $_fzf_split $git_root" \
 		--preview-label " Keyboard Shortcuts " \
