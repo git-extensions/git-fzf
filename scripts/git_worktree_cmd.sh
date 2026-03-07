@@ -33,7 +33,7 @@ _git_worktree_emit_row() {
 #   Reads porcelain worktree output (blocks separated by blank lines) and
 #   emits one tab-separated line per worktree:
 #       PATH\tBRANCH\tSHA7\tCOMMIT_SUBJECT
-#   PATH has $HOME replaced with ~ for compact display.
+#   PATH is the absolute path as reported by git.
 #   No colors, no spinner — pure data. Exposed as the 'list' subcommand so
 #   it can be called directly via 'git_worktree_cmd.sh list'.
 #

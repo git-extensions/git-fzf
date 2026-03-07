@@ -66,8 +66,11 @@ END {
             val = rows[r, c]
             maxw = (c <= n_maxw) ? maxw_arr[c] + 0 : 0
 
-            # For data rows, substitute $HOME prefix with ~ in column 1 (display only)
-            if (r > 1 && c == 1 && home_len > 0 && substr(val, 1, home_len) == home)
+            # For data rows, substitute $HOME prefix with ~ in column 1 (display only).
+            # Guard: next char must be "/" or string ends at $HOME to avoid matching
+            # sibling directories (e.g. /home/alice2 when HOME=/home/alice).
+            if (r > 1 && c == 1 && home_len > 0 && substr(val, 1, home_len) == home \
+                    && (length(val) == home_len || substr(val, home_len + 1, 1) == "/"))
                 val = "~" substr(val, home_len + 1)
 
             # Truncate data rows (never truncate the header)

@@ -113,7 +113,11 @@ _git_is_repo() {
 _git_root() {
 	local root
 	root=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
-	printf '%s\n' "${root/#"$HOME"/\~}"
+	if [[ "$root" == "$HOME" || "$root" == "$HOME/"* ]]; then
+		printf '%s\n' "~${root#"$HOME"}"
+	else
+		printf '%s\n' "$root"
+	fi
 }
 
 # ------------------------------------------------------------------------------

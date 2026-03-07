@@ -37,8 +37,7 @@ teardown() {
 	cd "$TEST_REPO"
 	run "$CMD"
 	[ "$status" -eq 0 ]
-	# Match either absolute or ~/... form (emit_row substitutes $HOME with ~)
-	echo "$output" | grep -q "${TEST_REPO/#$HOME/\~}"
+	echo "$output" | grep -q "$TEST_REPO"
 }
 
 @test "git_worktree_cmd.sh lists secondary worktree" {
@@ -108,7 +107,7 @@ teardown() {
 	cd "$TEST_REPO"
 	run "$CMD" list
 	[ "$status" -eq 0 ]
-	echo "$output" | grep -q "${TEST_REPO/#$HOME/\~}"
+	echo "$output" | grep -q "$TEST_REPO"
 }
 
 @test "list subcommand includes branch name" {
