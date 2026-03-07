@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+
+[ -z "${DEBUG:-}" ] || set -x
+
+set -euo pipefail
+
+_check_dependencies() {
+	if [[ "${BASH_VERSINFO[0]}" -lt 4 || ("${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -lt 4) ]]; then
+		echo "git-fzf: requires Bash 4.4+ (found ${BASH_VERSION})" >&2
+		echo "  macOS: brew install bash" >&2
+		exit 1
+	fi
+
+	local missing=()
+
+	if ! command -v git &>/dev/null; then
+		missing+=("git     — https://git-scm.com")
+	fi
+	if ! command -v fzf &>/dev/null; then
+		missing+=("fzf     — https://github.com/junegunn/fzf")
+	fi
+	if ! command -v gum &>/dev/null; then
+		missing+=("gum     — https://github.com/charmbracelet/gum")
+	fi
+
+	if [[ ${#missing[@]} -gt 0 ]]; then
+		echo "git-fzf: missing required dependencies:" >&2
+		for dep in "${missing[@]}"; do
+			echo "  $dep" >&2
+		done
+		exit 1
+	fi
+}
+
+_check_dependencies
+
+_git_fzf_source_dir=$(dirname "${BASH_SOURCE[0]}")
+
+# Source command implementations
+source "$_git_fzf_source_dir/scripts/git_worktree.sh"
+
+_show_root_help() {
+	cat <<'EOF'
+git-fzf - Interactive fuzzy finder for Git CLI
+
+USAGE:
+    git fzf [fzf-flags] <command> [command-flags]
+    git fzf --version
+    git fzf --help
+
+FZF FLAGS (specify before command):
+    Any fzf flags can be passed before the command. These are passed directly
+    to fzf. Common examples:
+
+    --tmux [position]         Open in tmux popup (default: center,50%,50%)
+                              Position format: [position][,width[,height]]
+                              Examples: "80%,80%", "center,50%,50%", "bottom"
+    --height <n>              Set height (e.g., --height 50%)
+    --border <style>          Set border style (e.g., --border rounded)
+    --preview-window <opts>   Configure preview window
+    --reverse                 Reverse layout
+
+    See 'man fzf' for all available fzf options.
+
+ENVIRONMENT VARIABLES:
+    Per-command fzf configuration (highest precedence):
+
+    GIT_FZF_<COMMAND>_OPTS
+        Override fzf options for specific commands.
+
+        Available variables:
+            GIT_FZF_WORKTREE_OPTS       Worktrees
+
+    Global fzf configuration (lower precedence):
+
+    GIT_FZF_FLAGS
+        Global fzf flags (set automatically from CLI --flags)
+
+    Precedence: Defaults < GIT_FZF_FLAGS < GIT_FZF_<COMMAND>_OPTS
+
+    Examples:
+        # Different heights per command
+        export GIT_FZF_WORKTREE_OPTS="--height 90%"
+
+        # Custom preview windows
+        export GIT_FZF_WORKTREE_OPTS="--preview-window right:50%"
+
+        # Different layouts
+        export GIT_FZF_WORKTREE_OPTS="--layout=reverse"
+
+COMMANDS:
+    worktree    Browse and interact with Git worktrees
+
+EXAMPLES:
+    # Basic usage
+    git fzf worktree                    # Browse worktrees interactively
+
+    # Shell integration (add to ~/.bashrc or ~/.zshrc)
+    gw() {
+      local path
+      path=$(git fzf worktree)
+      [ -n "$path" ] && cd "$path"
+    }
+
+    # With fzf flags (tmux popup)
+    git fzf --tmux worktree             # Open in tmux popup (default size)
+    git fzf --tmux "80%,80%" worktree   # Open in tmux popup (80% size)
+    git fzf --height 20 worktree        # Custom height
+
+DEBUG:
+    DEBUG=1 git fzf worktree            # Enable debug trace
+EOF
+}
+
+main() {
+	local fzf_flags=()
+	local command=""
+	local command_args=()
+
+	# Parse arguments: everything before command = fzf flags, everything after = command args
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		--version)
+			cat "$_git_fzf_source_dir/version.txt"
+			exit 0
+			;;
+		--help | -h | help)
+			_show_root_help
+			exit 0
+			;;
+		worktree)
+			command="$1"
+			shift
+			command_args=("$@")
+			break
+			;;
+		*)
+			fzf_flags+=("$1")
+			shift
+			;;
+		esac
+	done
+
+	# Export fzf flags for git_core.sh to use (always export to clear any stale env value)
+	if [[ ${#fzf_flags[@]} -gt 0 ]]; then
+		GIT_FZF_FLAGS="$(printf '%q ' "${fzf_flags[@]}")"
+		export GIT_FZF_FLAGS
+	else
+		export GIT_FZF_FLAGS=""
+	fi
+
+	# Dispatch to command with remaining args
+	case $command in
+	worktree)
+		_git_worktree_list "${command_args[@]}"
+		;;
+	"")
+		_show_root_help
+		;;
+	*)
+		gum log --level error "Unknown command '$command'"
+		gum log --level info "Available commands: worktree"
+		gum log --level info "Run 'git fzf --help' for detailed usage information"
+		exit 1
+		;;
+	esac
+}
+
+main "$@"

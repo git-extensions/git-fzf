@@ -1,0 +1,151 @@
+#!/usr/bin/env bash
+
+[ -z "${DEBUG:-}" ] || set -x
+
+set -euo pipefail
+
+_git_worktree_cmd_source_dir=$(dirname "${BASH_SOURCE[0]}")
+# shellcheck source=./git_core.sh
+source "$_git_worktree_cmd_source_dir/git_core.sh"
+
+# git_worktree_cmd.sh - Git Worktree commands for git-fzf
+#
+# This file is sourced by git_worktree.sh and provides
+# worktree listing and command dispatch functionality.
+
+# _git_worktree_list_raw()
+#
+# Parse 'git worktree list --porcelain' and emit tab-separated rows.
+#
+# DESCRIPTION:
+#   Reads porcelain worktree output (blocks separated by blank lines) and
+#   emits one tab-separated line per worktree:
+#       PATH\tBRANCH\tSHA7\tCOMMIT_SUBJECT
+#   PATH has $HOME replaced with ~ for compact display.
+#   No colors, no spinner — pure data. Exposed as the 'list' subcommand so
+#   it can be called directly via 'git_worktree_cmd.sh list'.
+#
+# RETURNS:
+#   Tab-separated rows (no header), one per worktree. Empty output when not
+#   in a git repo or no worktrees exist.
+#
+_git_worktree_list_raw() {
+	local worktrees
+	worktrees=$(git worktree list --porcelain 2>/dev/null) || return 0
+	[[ -z "$worktrees" ]] && return 0
+
+	local path="" sha="" branch="" detached=0
+
+	while IFS= read -r line || [[ -n "$line" ]]; do
+		if [[ "$line" == worktree\ * ]]; then
+			path="${line#worktree }"
+		elif [[ "$line" == HEAD\ * ]]; then
+			sha="${line#HEAD }"
+			sha="${sha:0:7}"
+		elif [[ "$line" == branch\ * ]]; then
+			branch="${line#branch }"
+			branch="${branch#refs/heads/}"
+		elif [[ "$line" == "detached" ]]; then
+			detached=1
+		elif [[ -z "$line" && -n "$path" ]]; then
+			# End of block — emit row
+			[[ $detached -eq 1 ]] && branch="(detached)"
+			local msg
+			msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
+			printf "%s\t%s\t%s\t%s\n" "${path/#"$HOME"/\~}" "${branch:-HEAD}" "${sha:-}" "${msg:-}"
+			path=""
+			sha=""
+			branch=""
+			detached=0
+		fi
+	done <<<"$worktrees"
+
+	# Emit last block if file did not end with a blank line
+	if [[ -n "$path" ]]; then
+		[[ $detached -eq 1 ]] && branch="(detached)"
+		local msg
+		msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
+		printf "%s\t%s\t%s\t%s\n" "${path/#"$HOME"/\~}" "${branch:-HEAD}" "${sha:-}" "${msg:-}"
+	fi
+}
+
+# _git_worktree_list_cmd()
+#
+# List git worktrees with colored, formatted output.
+#
+# DESCRIPTION:
+#   Calls the 'list' subcommand (this script) via gum spin for a loading
+#   indicator, then renders the tab-separated rows as an ANSI-colored table
+#   with a header suitable for fzf consumption.
+#
+# RETURNS:
+#   Colored table with header + one row per worktree.
+#
+_git_worktree_list_cmd() {
+	local raw
+	raw=$(gum spin --title "Loading worktrees..." -- \
+		"$_git_worktree_cmd_source_dir/git_worktree_cmd.sh" list)
+
+	[[ -z "$raw" ]] && return 0
+
+	{
+		printf "PATH\tBRANCH\tCOMMIT\tMESSAGE\n"
+		echo "$raw"
+	} |
+		awk -v styles="bold,status,faint,faint" \
+			-v max_widths="0,35,0,0" \
+			-f "$_git_worktree_cmd_source_dir/git_render.awk"
+}
+
+# _git_worktree_preview_help()
+#
+# Display keyboard shortcuts for worktree list
+#
+# DESCRIPTION:
+#   Outputs formatted help text showing available keyboard shortcuts
+#   for the worktree list. Designed to be displayed in fzf preview window.
+#
+_git_worktree_preview_help() {
+	gum format <<'EOF'
+| Key | Action |
+|-----|--------|
+| **`ctrl-o`** | Open directory in file manager |
+| **`ctrl-r`** | Reload list |
+| **`alt-x`** | Remove selected worktree |
+| **`alt-p`** | Prune stale worktrees |
+| **`alt-h`** | Toggle help |
+| **`ESC`** | Exit / print path |
+EOF
+}
+
+# ------------------------------------------------------------------------------
+# Direct Execution Support
+# ------------------------------------------------------------------------------
+# When run directly (not sourced), dispatch to the appropriate function.
+# ------------------------------------------------------------------------------
+main() {
+	local subcommand="${1:-}"
+
+	case "$subcommand" in
+	list)
+		_git_worktree_list_raw
+		;;
+	preview-help)
+		_git_worktree_preview_help
+		;;
+	remove)
+		shift
+		git worktree remove "$@"
+		;;
+	prune)
+		git worktree prune
+		;;
+	*)
+		_git_worktree_list_cmd "$@"
+		;;
+	esac
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	main "$@"
+fi
