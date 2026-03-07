@@ -117,3 +117,15 @@ teardown() {
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "wt-branch"
 }
+
+@test "list subcommand shows (bare) for bare clone" {
+	# A bare clone's main worktree is reported as 'bare' in porcelain output
+	BARE_REPO=$(mktemp -d)
+	rmdir "$BARE_REPO"
+	git clone --bare "$TEST_REPO" "$BARE_REPO"
+	cd "$BARE_REPO"
+	run "$CMD" list
+	rm -rf "$BARE_REPO"
+	[ "$status" -eq 0 ]
+	echo "$output" | grep -q "(bare)"
+}

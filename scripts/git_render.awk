@@ -33,6 +33,7 @@ BEGIN {
     ncols  = 0
     n_styles = split(styles,     style_arr, ",")
     n_maxw   = split(max_widths, maxw_arr,  ",")
+    home_len = length(home)
 }
 
 {
@@ -64,6 +65,10 @@ END {
         for (c = 1; c <= ncols; c++) {
             val = rows[r, c]
             maxw = (c <= n_maxw) ? maxw_arr[c] + 0 : 0
+
+            # For data rows, substitute $HOME prefix with ~ in column 1 (display only)
+            if (r > 1 && c == 1 && home_len > 0 && substr(val, 1, home_len) == home)
+                val = "~" substr(val, home_len + 1)
 
             # Truncate data rows (never truncate the header)
             # Keep orig_val for style checks — status colours must match the
