@@ -109,12 +109,13 @@ _git_worktree_preview_help() {
 	gum format <<'EOF'
 | Key | Action |
 |-----|--------|
+| **`enter`** | cd into selected worktree |
 | **`ctrl-o`** | Open directory in file manager |
 | **`ctrl-r`** | Reload list |
 | **`alt-x`** | Remove selected worktree |
 | **`alt-p`** | Prune stale worktrees |
 | **`alt-h`** | Toggle help |
-| **`ESC`** | Exit / print path |
+| **`ESC`** | Exit |
 EOF
 }
 
@@ -129,6 +130,11 @@ main() {
 	case "$subcommand" in
 	list)
 		_git_worktree_list_raw
+		;;
+	cd)
+		# Emit a shell command that cds into the given path — matches fzf ALT-C behaviour.
+		# The caller is expected to eval the output: eval "$(git fzf worktree)"
+		printf 'builtin cd -- %q\n' "${2/#\~/$HOME}"
 		;;
 	preview-help)
 		_git_worktree_preview_help

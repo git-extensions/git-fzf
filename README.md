@@ -59,17 +59,25 @@ git fzf --height 50% worktree       # fixed height
 
 ## Worktrees
 
-Browse all worktrees interactively. Selecting one and pressing **Enter**
-prints the path to stdout — pipe it wherever you need it.
+Browse all worktrees interactively. Press **Enter** to cd into the selected
+worktree — same behaviour as fzf's built-in `ALT-C` binding.
 
 ```bash
 git fzf worktree
+```
+
+Add `gw` to your shell config to use it:
+
+```bash
+# ~/.bashrc or ~/.zshrc
+gw() { eval "$(git fzf worktree)"; }
 ```
 
 ### Keybindings
 
 | Key      | Action                                                        |
 | -------- | ------------------------------------------------------------- |
+| `enter`  | cd into selected worktree                                     |
 | `ctrl-o` | Open worktree directory in file manager (`open` / `xdg-open`) |
 | `ctrl-r` | Reload worktree list                                          |
 | `alt-x`  | Remove selected worktree (`git worktree remove`)              |

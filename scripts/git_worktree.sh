@@ -19,17 +19,18 @@ source "$_git_worktree_source_dir/git_core.sh"
 #
 # DESCRIPTION:
 #   Displays a list of git worktrees in an interactive fuzzy finder (fzf)
-#   with keyboard shortcuts for common worktree operations. Prints the
-#   selected worktree path to stdout on exit/enter.
+#   with keyboard shortcuts for common worktree operations. On Enter, prints
+#   a 'builtin cd -- <path>' shell command to stdout (eval to apply).
 #
 # PARAMETERS:
 #   $@ - Optional flags (currently passed through; --help/-h shows git help)
 #
 # RETURNS:
-#   0 - Success; prints selected worktree path to stdout
+#   0 - Success; prints 'builtin cd -- <path>' to stdout
 #   1 - Failure (not in a git repo, or no worktrees found)
 #
 # KEYBOARD SHORTCUTS:
+#   enter     - Print cd command for selected worktree (eval to apply)
 #   ctrl-o    - Open directory in file manager (open / xdg-open)
 #   ctrl-r    - Reload worktree list
 #   alt-x     - Remove selected worktree
@@ -70,11 +71,12 @@ _git_worktree_list() {
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split set by sourced git_core.sh
 	# Interactive worktree browser
 	echo "$git_worktree_list" | fzf "${_fzf_options[@]}" \
-		--accept-nth 1 --with-nth 1.. \
+		--with-nth 1.. \
 		--footer "$_fzf_icon Git Worktrees $_fzf_split $git_root" \
 		--preview-label " Keyboard Shortcuts " \
 		--preview "$_git_worktree_source_dir/git_worktree_cmd.sh preview-help" \
 		--bind "load:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root)" \
+		--bind "enter:become($_git_worktree_source_dir/git_worktree_cmd.sh cd {1})" \
 		--bind "ctrl-o:execute-silent($git_opener {1})" \
 		--bind "ctrl-r:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Reloading...)+reload($git_worktree_reload)" \
 		--bind "alt-x:execute-silent($_git_worktree_source_dir/git_worktree_cmd.sh remove {1})+reload($git_worktree_reload)" \
