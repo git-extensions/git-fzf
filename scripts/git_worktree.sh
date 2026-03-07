@@ -24,7 +24,7 @@ source "$_git_worktree_source_dir/git_core.sh"
 #   printed in ~/... form; all others are absolute.
 #
 # PARAMETERS:
-#   $@ - Optional flags (currently passed through; --help/-h shows git help)
+#   $@ - --help or -h shows 'git worktree list --help'; all other flags are ignored
 #
 # RETURNS:
 #   0   - Enter pressed; prints selected worktree path to stdout
@@ -40,7 +40,7 @@ source "$_git_worktree_source_dir/git_core.sh"
 #
 _git_worktree_list() {
 	if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-		git worktree --help
+		git worktree list --help
 		return
 	fi
 

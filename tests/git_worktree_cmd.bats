@@ -2,6 +2,8 @@
 
 # git_worktree_cmd.bats — unit tests for scripts/git_worktree_cmd.sh
 
+bats_require_minimum_version 1.5.0
+
 SCRIPTS_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")/../scripts" && pwd)"
 CMD="$SCRIPTS_DIR/git_worktree_cmd.sh"
 
@@ -103,8 +105,8 @@ teardown() {
 }
 
 @test "unknown subcommand prints error to stderr" {
-	run "$CMD" unknownsubcmd
-	echo "$output" | grep -q "unknown subcommand"
+	run --separate-stderr "$CMD" unknownsubcmd
+	echo "$stderr" | grep -q "unknown subcommand"
 }
 
 # ---------------------------------------------------------------------------

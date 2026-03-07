@@ -25,22 +25,6 @@ _git_worktree_emit_row() {
 	printf "%s\t%s\t%s\t%s\n" "$1" "${2:-HEAD}" "${3:-}" "${4:-}"
 }
 
-# _git_worktree_cmd_list()
-#
-# Parse 'git worktree list --porcelain' and emit tab-separated rows.
-#
-# DESCRIPTION:
-#   Reads porcelain worktree output (blocks separated by blank lines) and
-#   emits one tab-separated line per worktree:
-#       PATH\tBRANCH\tSHA7\tCOMMIT_SUBJECT
-#   PATH is the absolute path as reported by git.
-#   No colors, no spinner — pure data. Exposed as the 'list' subcommand so
-#   it can be called directly via 'git_worktree_cmd.sh list'.
-#
-# RETURNS:
-#   Tab-separated rows (no header), one per worktree. Empty output when not
-#   in a git repo or no worktrees exist.
-#
 # _git_worktree_flush_block()
 #
 # Resolve branch label, fetch commit subject, and emit one TSV row.
@@ -57,12 +41,28 @@ _git_worktree_flush_block() {
 	_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
 }
 
+# _git_worktree_cmd_list()
+#
+# Parse 'git worktree list --porcelain' and emit tab-separated rows.
+#
+# DESCRIPTION:
+#   Reads porcelain worktree output (blocks separated by blank lines) and
+#   emits one tab-separated line per worktree:
+#       PATH\tBRANCH\tSHA7\tCOMMIT_SUBJECT
+#   PATH is the absolute path as reported by git.
+#   No colors, no spinner — pure data. Exposed as the 'list' subcommand so
+#   it can be called directly via 'git_worktree_cmd.sh list'.
+#
+# RETURNS:
+#   Tab-separated rows (no header), one per worktree. Empty output when not
+#   in a git repo or no worktrees exist.
+#
 _git_worktree_cmd_list() {
 	local worktrees
 	worktrees=$(git worktree list --porcelain 2>/dev/null) || return 0
 	[[ -z "$worktrees" ]] && return 0
 
-	local path="" sha="" branch="" msg="" detached=0 bare=0
+	local path="" sha="" branch="" detached=0 bare=0
 
 	while IFS= read -r line || [[ -n "$line" ]]; do
 		if [[ "$line" == worktree\ * ]]; then
@@ -79,7 +79,7 @@ _git_worktree_cmd_list() {
 			bare=1
 		elif [[ -z "$line" && -n "$path" ]]; then
 			_git_worktree_flush_block "$path" "$branch" "$sha" "$detached" "$bare"
-			path=""; sha=""; branch=""; msg=""; detached=0; bare=0
+			path=""; sha=""; branch=""; detached=0; bare=0
 		fi
 	done <<<"$worktrees"
 
