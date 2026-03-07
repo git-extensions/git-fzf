@@ -34,6 +34,14 @@
             makeWrapper $out/share/git-fzf/git-fzf $out/bin/git-fzf \
               --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}
           '';
+
+          meta = {
+            description = "Interactive fuzzy finder for Git worktrees";
+            homepage = "https://github.com/git-extensions/git-fzf";
+            license = pkgs.lib.licenses.mit;
+            maintainers = [ ];
+            platforms = pkgs.lib.platforms.unix;
+          };
         };
 
         devShells.default = pkgs.mkShell {

@@ -64,7 +64,7 @@ _git_worktree_list() {
 			# End of block — emit row
 			[[ $detached -eq 1 ]] && branch="(detached)"
 			[[ $bare -eq 1 ]] && branch="(bare)"
-			msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
+			msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || true)
 			_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
 			path=""; sha=""; branch=""; msg=""; detached=0; bare=0
 		fi
@@ -74,7 +74,7 @@ _git_worktree_list() {
 	if [[ -n "$path" ]]; then
 		[[ $detached -eq 1 ]] && branch="(detached)"
 		[[ $bare -eq 1 ]] && branch="(bare)"
-		msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
+		msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || true)
 		_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
 	fi
 }

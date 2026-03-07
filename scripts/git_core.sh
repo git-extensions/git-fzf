@@ -40,7 +40,7 @@ _fzf_split="·"
 #
 # EXAMPLE:
 #   _git_fzf_options "WORKTREE"
-#   echo "$data" | fzf "${_fzf_options[@]}" ...
+#   printf '%s\n' "$data" | fzf "${_fzf_options[@]}" ...
 #
 _git_fzf_options() {
 	local command_id="${1:-}"
@@ -112,11 +112,8 @@ _git_is_repo() {
 #
 _git_root() {
 	local root
-	root=$(git rev-parse --show-toplevel 2>/dev/null) || {
-		echo ""
-		return
-	}
-	echo "${root/#"$HOME"/\~}"
+	root=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
+	printf '%s\n' "${root/#"$HOME"/\~}"
 }
 
 # ------------------------------------------------------------------------------

@@ -49,6 +49,13 @@ teardown() {
 	[ "$(realpath "$expanded")" = "$(realpath "$TEST_REPO")" ]
 }
 
+@test "_git_root returns empty string outside a git repo" {
+	cd "$TEST_OUTSIDE"
+	source "$SCRIPTS_DIR/git_core.sh"
+	result=$(_git_root)
+	[ -z "$result" ]
+}
+
 # ---------------------------------------------------------------------------
 # _git_opener
 # ---------------------------------------------------------------------------
