@@ -20,7 +20,7 @@ source "$_git_worktree_source_dir/git_core.sh"
 # DESCRIPTION:
 #   Displays a list of git worktrees in an interactive fuzzy finder (fzf)
 #   with keyboard shortcuts for common worktree operations. Prints the
-#   selected worktree path to stdout on exit/enter.
+#   selected worktree path (~/... form) to stdout on enter/esc.
 #
 # PARAMETERS:
 #   $@ - Optional flags (currently passed through; --help/-h shows git help)

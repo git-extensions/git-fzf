@@ -12,7 +12,6 @@ _fzf_icon=" "
 # Separator used in fzf display templates
 _fzf_split="·"
 
-
 # _git_fzf_options()
 #
 # Build fzf options array with user-provided flags
@@ -82,7 +81,7 @@ _git_fzf_options() {
 #
 # Print the available file manager opener command.
 #
-# Returns:
+# RETURNS:
 #   "open" on macOS, "xdg-open" otherwise.
 #
 _git_opener() {
@@ -97,7 +96,7 @@ _git_opener() {
 #
 # Check if the current directory is inside a git work tree.
 #
-# Returns:
+# RETURNS:
 #   0 if inside a git repository, 1 otherwise.
 #
 _git_is_repo() {
@@ -108,7 +107,7 @@ _git_is_repo() {
 #
 # Get the root directory of the current git repository.
 #
-# Returns:
+# RETURNS:
 #   Path to the repository root with $HOME replaced by ~, or empty string on error.
 #
 _git_root() {

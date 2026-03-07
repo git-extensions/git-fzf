@@ -10,8 +10,8 @@ source "$_git_worktree_cmd_source_dir/git_core.sh"
 
 # git_worktree_cmd.sh - Git Worktree commands for git-fzf
 #
-# This file is sourced by git_worktree.sh and provides
-# worktree listing and command dispatch functionality.
+# Invoked as a subprocess by git_worktree.sh. Provides worktree
+# data emission and fzf action dispatch (list, preview-help, remove, prune).
 
 # _git_worktree_emit_row()
 #
@@ -45,7 +45,7 @@ _git_worktree_list() {
 	worktrees=$(git worktree list --porcelain 2>/dev/null) || return 0
 	[[ -z "$worktrees" ]] && return 0
 
-	local path="" sha="" branch="" detached=0
+	local path="" sha="" branch="" msg="" detached=0
 
 	while IFS= read -r line || [[ -n "$line" ]]; do
 		if [[ "$line" == worktree\ * ]]; then
@@ -61,17 +61,15 @@ _git_worktree_list() {
 		elif [[ -z "$line" && -n "$path" ]]; then
 			# End of block — emit row
 			[[ $detached -eq 1 ]] && branch="(detached)"
-			local msg
 			msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
 			_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
-			path=""; sha=""; branch=""; detached=0
+			path=""; sha=""; branch=""; msg=""; detached=0
 		fi
 	done <<<"$worktrees"
 
 	# Emit last block if file did not end with a blank line
 	if [[ -n "$path" ]]; then
 		[[ $detached -eq 1 ]] && branch="(detached)"
-		local msg
 		msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
 		_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
 	fi
