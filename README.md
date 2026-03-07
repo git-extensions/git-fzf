@@ -77,36 +77,6 @@ git fzf worktree
 | `alt-h`  | Toggle keyboard shortcut preview                              |
 | `ESC`    | Exit                                                          |
 
-## Recipes
-
-**Jump into a worktree from anywhere**
-
-Add `gw` to your shell config to `cd` directly into the selected worktree:
-
-```bash
-# ~/.bashrc or ~/.zshrc
-gw() {
-  local path
-  path=$(git fzf worktree)
-  [ -n "$path" ] && cd "$path"
-}
-```
-
-**Open in a tmux popup, jump on select**
-
-```bash
-gw() {
-  local path
-  path=$(git fzf --tmux "80%,60%" worktree)
-  [ -n "$path" ] && cd "$path"
-}
-```
-
-**Remove a worktree without leaving the terminal**
-
-Press `alt-x` on any row to run `git worktree remove` in place, then the
-list reloads automatically. No path copying, no second terminal.
-
 ## Configuration
 
 Override fzf options per command via environment variables:
