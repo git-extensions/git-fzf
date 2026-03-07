@@ -24,7 +24,7 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
-# _git_worktree_list_cmd (via direct execution)
+# default invocation — _git_worktree_list_cmd (colored table renderer)
 # ---------------------------------------------------------------------------
 
 @test "git_worktree_cmd.sh outputs a header line" {
@@ -94,7 +94,21 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
-# list subcommand (raw TSV)
+# unknown subcommand
+# ---------------------------------------------------------------------------
+
+@test "unknown subcommand exits 1" {
+	run "$CMD" unknownsubcmd
+	[ "$status" -eq 1 ]
+}
+
+@test "unknown subcommand prints error to stderr" {
+	run "$CMD" unknownsubcmd
+	echo "$output" | grep -q "unknown subcommand"
+}
+
+# ---------------------------------------------------------------------------
+# list subcommand — _git_worktree_cmd_list (raw TSV producer)
 # ---------------------------------------------------------------------------
 
 @test "list subcommand emits tab-separated rows" {

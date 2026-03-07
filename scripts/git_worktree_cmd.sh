@@ -41,6 +41,22 @@ _git_worktree_emit_row() {
 #   Tab-separated rows (no header), one per worktree. Empty output when not
 #   in a git repo or no worktrees exist.
 #
+# _git_worktree_flush_block()
+#
+# Resolve branch label, fetch commit subject, and emit one TSV row.
+# Called for each completed porcelain block (both mid-stream and trailing).
+#
+# PARAMETERS:  $1=path  $2=branch  $3=sha7  $4=detached(0/1)  $5=bare(0/1)
+#
+_git_worktree_flush_block() {
+	local path="$1" branch="$2" sha="$3" detached="$4" bare="$5" msg=""
+	[[ $detached -eq 1 ]] && branch="(detached)"
+	[[ $bare -eq 1 ]] && branch="(bare)"
+	[[ -n "$sha" ]] && msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || true)
+	msg="${msg//$'\t'/ }"
+	_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
+}
+
 _git_worktree_cmd_list() {
 	local worktrees
 	worktrees=$(git worktree list --porcelain 2>/dev/null) || return 0
@@ -62,24 +78,13 @@ _git_worktree_cmd_list() {
 		elif [[ "$line" == "bare" ]]; then
 			bare=1
 		elif [[ -z "$line" && -n "$path" ]]; then
-			# End of block — emit row
-			[[ $detached -eq 1 ]] && branch="(detached)"
-			[[ $bare -eq 1 ]] && branch="(bare)"
-			[[ -n "$sha" ]] && msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || true)
-			msg="${msg//$'\t'/ }"
-			_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
+			_git_worktree_flush_block "$path" "$branch" "$sha" "$detached" "$bare"
 			path=""; sha=""; branch=""; msg=""; detached=0; bare=0
 		fi
 	done <<<"$worktrees"
 
-	# Emit last block if file did not end with a blank line
-	if [[ -n "$path" ]]; then
-		[[ $detached -eq 1 ]] && branch="(detached)"
-		[[ $bare -eq 1 ]] && branch="(bare)"
-		[[ -n "$sha" ]] && msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || true)
-		msg="${msg//$'\t'/ }"
-		_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
-	fi
+	# Emit last block if porcelain output did not end with a blank line
+	[[ -n "$path" ]] && _git_worktree_flush_block "$path" "$branch" "$sha" "$detached" "$bare"
 }
 
 # _git_worktree_list_cmd()

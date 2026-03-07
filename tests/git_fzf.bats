@@ -32,7 +32,7 @@ GIT_FZF="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)/git-fzf"
 	echo "$output" | grep -qi "usage"
 }
 
-@test "git-fzf with no recognised command does not start fzf" {
+@test "git-fzf with only fzf flags and no command shows help" {
 	# Unrecognised tokens are treated as fzf flags; with no command, help is shown
 	run "$GIT_FZF" --some-unknown-flag
 	[ "$status" -eq 0 ]
