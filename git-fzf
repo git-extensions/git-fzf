@@ -84,7 +84,7 @@ ENVIRONMENT VARIABLES:
     Global fzf configuration (lower precedence):
 
     GIT_FZF_FLAGS
-        Global fzf flags (set automatically from CLI --flags)
+        Global fzf flags (set automatically from fzf flags passed before the command)
 
     Precedence: Defaults < GIT_FZF_FLAGS < GIT_FZF_<COMMAND>_OPTS
 
@@ -152,22 +152,16 @@ main() {
 		export GIT_FZF_FLAGS=""
 	fi
 
-	# Dispatch to command with remaining args
-	case "$cmd" in
-	worktree)
+	# Dispatch to command with remaining args.
+	# Note: unrecognised tokens before the command are collected as fzf flags
+	# (they may be fzf flag values, e.g. --height 50%), so only "" and known
+	# commands are reachable here.
+	if [[ "$cmd" == "worktree" ]]; then
 		_check_dependencies
 		_git_worktree_list "${command_args[@]}"
-		;;
-	"")
+	else
 		_show_root_help
-		;;
-	*)
-		echo "git-fzf: unknown command '$cmd'" >&2
-		echo "Available commands: worktree" >&2
-		echo "Run 'git fzf --help' for detailed usage information" >&2
-		exit 1
-		;;
-	esac
+	fi
 }
 
 main "$@"

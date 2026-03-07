@@ -128,7 +128,7 @@ _git_worktree_preview_help() {
 | **`alt-x`** | Remove selected worktree |
 | **`alt-p`** | Prune stale worktrees |
 | **`alt-h`** | Toggle help |
-| **`ESC`** | Exit / print path |
+| **`ESC`** | Exit (no output) |
 EOF
 }
 
@@ -154,8 +154,12 @@ main() {
 	prune)
 		git worktree prune
 		;;
+	"")
+		_git_worktree_list_cmd
+		;;
 	*)
-		_git_worktree_list_cmd "$@"
+		echo "git_worktree_cmd.sh: unknown subcommand '$subcommand'" >&2
+		exit 1
 		;;
 	esac
 }
