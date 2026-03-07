@@ -16,17 +16,30 @@ for every common worktree action.
 
 ## Installation
 
-```bash
-git clone https://github.com/git-extensions/git-fzf.git ~/.git-fzf
-chmod +x ~/.git-fzf/git-fzf ~/.git-fzf/scripts/*.sh
-export PATH="$HOME/.git-fzf:$PATH"   # add to ~/.bashrc or ~/.zshrc
-```
+### Nix (recommended)
 
-Git discovers any `git-*` binary on `PATH`, so once installed:
+Run directly without installing:
 
 ```bash
-git fzf worktree
+nix run github:git-extensions/git-fzf -- worktree
 ```
+
+Or install into your profile:
+
+```bash
+nix profile install github:git-extensions/git-fzf
+```
+
+### Manual
+
+Symlink the `git-fzf` script onto your `$PATH` so git discovers it as a
+custom command:
+
+```bash
+ln -s /path/to/git-extensions/git-fzf/git-fzf /usr/local/bin/git-fzf
+```
+
+Then use it as `git fzf <command>`.
 
 ## Usage
 

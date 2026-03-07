@@ -16,8 +16,25 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        runtimeDeps = with pkgs; [ fzf gum gawk ];
       in
       {
+        packages.default = pkgs.stdenv.mkDerivation {
+          pname = "git-fzf";
+          version = pkgs.lib.removeSuffix "\n" (builtins.readFile ./version.txt);
+          src = ./.;
+
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+
+          installPhase = ''
+            mkdir -p $out/share/git-fzf $out/bin
+            cp -r * $out/share/git-fzf/
+            chmod +x $out/share/git-fzf/git-fzf $out/share/git-fzf/scripts/*.sh
+            makeWrapper $out/share/git-fzf/git-fzf $out/bin/git-fzf \
+              --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}
+          '';
+        };
+
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             bash
