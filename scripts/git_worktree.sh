@@ -49,6 +49,9 @@ _git_worktree_list() {
 		return 1
 	fi
 
+	local git_core_cmd
+	git_core_cmd="$_git_worktree_source_dir/git_core.sh"
+
 	local git_worktree_cmd
 	git_worktree_cmd="$_git_worktree_source_dir/git_worktree_cmd.sh"
 
@@ -68,13 +71,14 @@ _git_worktree_list() {
 
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split set by sourced git_core.sh
 	# Interactive worktree browser
-	printf '%s' "$git_worktree_list" | fzf "${_fzf_options[@]}" \
+	echo "$git_worktree_list" | fzf "${_fzf_options[@]}" \
 		--accept-nth 1 \
 		--footer "$_fzf_icon Git Worktrees $_fzf_split $git_root" \
 		--preview-label " Keyboard Shortcuts " \
 		--preview "$git_worktree_cmd preview-help" \
+		--bind "load:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root)" \
 		--bind "ctrl-r:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Reloading...)+reload($git_worktree_cmd)" \
-		--bind "ctrl-o:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Opening...)+execute-silent($_git_worktree_source_dir/git_core.sh open {1})" \
+		--bind "ctrl-o:execute-silent($git_core_cmd open {1})+change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root)" \
 		--bind "alt-p:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Pruning...)+execute-silent($git_worktree_cmd prune)+reload($git_worktree_cmd)" \
 		--bind "alt-x:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Removing...)+execute-silent($git_worktree_cmd remove {1})+reload($git_worktree_cmd)" \
 		--bind "alt-h:toggle-preview"

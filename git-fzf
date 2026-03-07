@@ -160,10 +160,11 @@ main() {
 	# Export fzf flags for git_core.sh to use (always export to clear any stale env value)
 	if [[ ${#fzf_flags[@]} -gt 0 ]]; then
 		GIT_FZF_FLAGS="$(printf '%q ' "${fzf_flags[@]}")"
-		export GIT_FZF_FLAGS
 	else
-		export GIT_FZF_FLAGS=""
+		GIT_FZF_FLAGS=""
 	fi
+	# Export the flags
+	export GIT_FZF_FLAGS
 
 	# Dispatch to command with remaining args.
 	# Note: unrecognised tokens before the command are collected as fzf flags

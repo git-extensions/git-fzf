@@ -91,8 +91,33 @@ teardown() {
 	cd "$TEST_REPO"
 	run "$CMD" remove "$TEST_REPO-wt"
 	[ "$status" -eq 0 ]
-	# Directory should be gone
 	[ ! -d "$TEST_REPO-wt" ]
+}
+
+@test "remove subcommand expands ~/path before removing" {
+	# Re-create the worktree under a ~/... path if possible, otherwise use a
+	# symlink trick: just verify _git_expand_path is invoked by confirming that
+	# a tilde-prefixed path resolving to the same location works.
+	cd "$TEST_REPO"
+	local rel="${TEST_REPO-wt/#$HOME/\~}"
+	if [[ "$TEST_REPO-wt" == "$HOME/"* ]]; then
+		tilde_path="~${TEST_REPO-wt#"$HOME"}"
+		run "$CMD" remove "$tilde_path"
+		[ "$status" -eq 0 ]
+		[ ! -d "$TEST_REPO-wt" ]
+	else
+		skip "TEST_REPO not under HOME; tilde expansion not exercisable"
+	fi
+}
+
+@test "remove subcommand without path exits 1" {
+	run "$CMD" remove
+	[ "$status" -eq 1 ]
+}
+
+@test "remove subcommand without path prints error to stderr" {
+	run --separate-stderr "$CMD" remove
+	echo "$stderr" | grep -q "requires a worktree path"
 }
 
 # ---------------------------------------------------------------------------

@@ -87,6 +87,11 @@ _git_fzf_options() {
 # RETURNS:
 #   Expanded path printed to stdout.
 #
+# NOTE:
+#   Only ~/… form is handled. Bare ~username is not supported and will
+#   produce an incorrect result. Worktree paths are always absolute or ~/…
+#   so this is not a concern in practice.
+#
 _git_expand_path() {
 	printf '%s' "${1/#~/$HOME}"
 }
@@ -146,7 +151,13 @@ _git_root() {
 # ------------------------------------------------------------------------------
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 	case "${1:-}" in
-	open) _git_open "${2:-}" ;;
+	open)
+		if [[ -z "${2:-}" ]]; then
+			gum log --level error "open requires a path"
+			exit 1
+		fi
+		_git_open "$2"
+		;;
 	*) git "$@" ;;
 	esac
 fi

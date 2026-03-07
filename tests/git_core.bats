@@ -103,6 +103,20 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
+# git_core.sh open dispatch
+# ---------------------------------------------------------------------------
+
+@test "git_core.sh open without path exits 1" {
+	run "$SCRIPTS_DIR/git_core.sh" open
+	[ "$status" -eq 1 ]
+}
+
+@test "git_core.sh open without path prints error to stderr" {
+	run --separate-stderr "$SCRIPTS_DIR/git_core.sh" open
+	echo "$stderr" | grep -q "requires a path"
+}
+
+# ---------------------------------------------------------------------------
 # _git_fzf_options
 # ---------------------------------------------------------------------------
 
