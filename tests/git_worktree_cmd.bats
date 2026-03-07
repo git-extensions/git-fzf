@@ -117,6 +117,15 @@ teardown() {
 	echo "$output" | grep -q "wt-branch"
 }
 
+@test "list subcommand shows (detached) for detached HEAD worktree" {
+	git -C "$TEST_REPO" worktree add --detach "$TEST_REPO-detached"
+	cd "$TEST_REPO"
+	run "$CMD" list
+	rm -rf "$TEST_REPO-detached"
+	[ "$status" -eq 0 ]
+	echo "$output" | grep -q "(detached)"
+}
+
 @test "list subcommand shows (bare) for bare clone" {
 	# A bare clone's main worktree is reported as 'bare' in porcelain output
 	BARE_REPO=$(mktemp -d)

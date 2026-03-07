@@ -90,6 +90,7 @@ Precedence: **Defaults** < **`GIT_FZF_FLAGS`** < **`GIT_FZF_WORKTREE_OPTS`**
 
 ```bash
 export GIT_FZF_WORKTREE_OPTS="--height 90%"
+# or
 export GIT_FZF_WORKTREE_OPTS="--tmux 80%,80%"
 ```
 

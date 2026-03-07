@@ -41,8 +41,14 @@ BEGIN {
     if (NF > ncols) ncols = NF
     for (i = 1; i <= NF; i++) {
         rows[nrows, i] = $i
-        if (length($i) > col_width[i])
-            col_width[i] = length($i)
+        # Track display width: ~/substitution in col 1 data rows shortens the value
+        w = length($i)
+        if (nrows > 1 && i == 1 && home_len > 0 \
+                && substr($i, 1, home_len) == home \
+                && (length($i) == home_len || substr($i, home_len + 1, 1) == "/"))
+            w = 1 + length($i) - home_len
+        if (w > col_width[i])
+            col_width[i] = w
     }
 }
 
