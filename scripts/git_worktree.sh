@@ -76,8 +76,8 @@ _git_worktree_list() {
 	local tmux_binds=()
 	if [[ -n "${TMUX:-}" ]]; then
 		tmux_binds=(
-			--bind "alt-W:execute($git_tmux_cmd new-window {1})"
-			--bind "alt-S:execute-silent($git_tmux_cmd new-session {1})"
+			--bind "alt-W:execute($git_tmux_cmd new-window {1})+abort"
+			--bind "alt-S:execute($git_tmux_cmd new-session {1})+abort"
 		)
 	fi
 
