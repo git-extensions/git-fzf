@@ -109,6 +109,7 @@ _git_is_repo() {
 #
 # RETURNS:
 #   Path to the repository root with $HOME replaced by ~, or empty string on error.
+#   For bare repositories, falls back to --absolute-git-dir (the .git directory itself).
 #
 _git_root() {
 	local root

@@ -125,6 +125,20 @@ teardown() {
 	echo "$output" | grep -q "(detached)"
 }
 
+@test "list subcommand strips tabs from commit subject" {
+	# Commit with a tab in the subject
+	git -C "$TEST_REPO" commit --allow-empty -m $'subject\twith\ttabs'
+	cd "$TEST_REPO"
+	run "$CMD" list
+	[ "$status" -eq 0 ]
+	# Output must not contain a literal tab in the message field (4th field)
+	# We check that no row has more than 3 tabs (path, branch, sha, message = 3 separators)
+	while IFS= read -r row; do
+		count=$(printf '%s' "$row" | tr -cd '\t' | wc -c)
+		[ "$count" -le 3 ]
+	done <<<"$output"
+}
+
 @test "list subcommand shows (bare) for bare clone" {
 	# A bare clone's main worktree is reported as 'bare' in porcelain output
 	BARE_REPO=$(mktemp -d)

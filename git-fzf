@@ -144,8 +144,6 @@ main() {
 		esac
 	done
 
-	_check_dependencies
-
 	# Export fzf flags for git_core.sh to use (always export to clear any stale env value)
 	if [[ ${#fzf_flags[@]} -gt 0 ]]; then
 		GIT_FZF_FLAGS="$(printf '%q ' "${fzf_flags[@]}")"
@@ -157,6 +155,7 @@ main() {
 	# Dispatch to command with remaining args
 	case "$cmd" in
 	worktree)
+		_check_dependencies
 		_git_worktree_list "${command_args[@]}"
 		;;
 	"")
