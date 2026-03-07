@@ -20,15 +20,16 @@ source "$_git_worktree_source_dir/git_core.sh"
 # DESCRIPTION:
 #   Displays a list of git worktrees in an interactive fuzzy finder (fzf)
 #   with keyboard shortcuts for common worktree operations. Prints the
-#   selected worktree path to stdout on enter/esc. Paths under $HOME are
+#   selected worktree path to stdout on Enter. Paths under $HOME are
 #   printed in ~/... form; all others are absolute.
 #
 # PARAMETERS:
 #   $@ - Optional flags (currently passed through; --help/-h shows git help)
 #
 # RETURNS:
-#   0 - Success; prints selected worktree path to stdout
-#   1 - Failure (not in a git repo, or no worktrees found)
+#   0   - Enter pressed; prints selected worktree path to stdout
+#   1   - Failure (not in a git repo, or no worktrees found)
+#   130 - ESC or Ctrl-C pressed (fzf standard exit code); nothing printed
 #
 # KEYBOARD SHORTCUTS:
 #   ctrl-o    - Open directory in file manager (open / xdg-open)

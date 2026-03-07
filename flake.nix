@@ -36,7 +36,7 @@
           '';
 
           meta = {
-            description = "Interactive fuzzy finder for Git worktrees";
+            description = "Interactive fuzzy finder for Git";
             homepage = "https://github.com/git-extensions/git-fzf";
             license = pkgs.lib.licenses.mit;
             maintainers = [ ];

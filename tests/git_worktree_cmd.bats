@@ -8,6 +8,7 @@ CMD="$SCRIPTS_DIR/git_worktree_cmd.sh"
 setup() {
 	# Create a temp git repo with a commit so worktrees work
 	TEST_REPO=$(mktemp -d)
+	BARE_REPO=""
 	git -C "$TEST_REPO" init -q
 	git -C "$TEST_REPO" config user.email "test@test.com"
 	git -C "$TEST_REPO" config user.name "Test"
@@ -19,6 +20,7 @@ setup() {
 
 teardown() {
 	rm -rf "$TEST_REPO" "$TEST_REPO-wt" "$TEST_REPO-detached"
+	if [[ -n "${BARE_REPO:-}" ]]; then rm -rf "$BARE_REPO"; fi
 }
 
 # ---------------------------------------------------------------------------
@@ -146,7 +148,6 @@ teardown() {
 	git clone --bare "$TEST_REPO" "$BARE_REPO"
 	cd "$BARE_REPO"
 	run "$CMD" list
-	rm -rf "$BARE_REPO"
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "(bare)"
 }

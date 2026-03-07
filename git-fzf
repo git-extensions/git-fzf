@@ -162,9 +162,9 @@ main() {
 		_show_root_help
 		;;
 	*)
-		gum log --level error "Unknown command '$cmd'"
-		gum log --level info "Available commands: worktree"
-		gum log --level info "Run 'git fzf --help' for detailed usage information"
+		echo "git-fzf: unknown command '$cmd'" >&2
+		echo "Available commands: worktree" >&2
+		echo "Run 'git fzf --help' for detailed usage information" >&2
 		exit 1
 		;;
 	esac

@@ -7,6 +7,7 @@ SCRIPTS_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")/../scripts" && pwd)"
 setup() {
 	# Create a temp git repo for is_repo / root tests
 	TEST_REPO=$(mktemp -d)
+	BARE_REPO=""
 	git -C "$TEST_REPO" init -q
 	git -C "$TEST_REPO" config user.email "test@test.com"
 	git -C "$TEST_REPO" config user.name "Test"
@@ -16,6 +17,7 @@ setup() {
 
 teardown() {
 	rm -rf "$TEST_REPO" "$TEST_OUTSIDE"
+	if [[ -n "${BARE_REPO:-}" ]]; then rm -rf "$BARE_REPO"; fi
 }
 
 # ---------------------------------------------------------------------------
@@ -36,7 +38,6 @@ teardown() {
 	cd "$BARE_REPO"
 	source "$SCRIPTS_DIR/git_core.sh"
 	run _git_is_repo
-	rm -rf "$BARE_REPO"
 	[ "$status" -eq 0 ]
 }
 
@@ -74,7 +75,6 @@ teardown() {
 	cd "$BARE_REPO"
 	source "$SCRIPTS_DIR/git_core.sh"
 	result=$(_git_root)
-	rm -rf "$BARE_REPO"
 	[ -n "$result" ]
 }
 

@@ -25,7 +25,7 @@ _git_worktree_emit_row() {
 	printf "%s\t%s\t%s\t%s\n" "$1" "${2:-HEAD}" "${3:-}" "${4:-}"
 }
 
-# _git_worktree_list()
+# _git_worktree_cmd_list()
 #
 # Parse 'git worktree list --porcelain' and emit tab-separated rows.
 #
@@ -41,7 +41,7 @@ _git_worktree_emit_row() {
 #   Tab-separated rows (no header), one per worktree. Empty output when not
 #   in a git repo or no worktrees exist.
 #
-_git_worktree_list() {
+_git_worktree_cmd_list() {
 	local worktrees
 	worktrees=$(git worktree list --porcelain 2>/dev/null) || return 0
 	[[ -z "$worktrees" ]] && return 0
@@ -142,7 +142,7 @@ main() {
 
 	case "$subcommand" in
 	list)
-		_git_worktree_list
+		_git_worktree_cmd_list
 		;;
 	preview-help)
 		_git_worktree_preview_help
