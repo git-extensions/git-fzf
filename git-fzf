@@ -35,8 +35,6 @@ _check_dependencies() {
 	fi
 }
 
-_check_dependencies
-
 # Resolve symlinks so scripts/ is found even when git-fzf is symlinked onto PATH
 _git_fzf_source_dir=$(
 	_src="${BASH_SOURCE[0]}"
@@ -145,6 +143,8 @@ main() {
 			;;
 		esac
 	done
+
+	_check_dependencies
 
 	# Export fzf flags for git_core.sh to use (always export to clear any stale env value)
 	if [[ ${#fzf_flags[@]} -gt 0 ]]; then

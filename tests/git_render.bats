@@ -113,6 +113,13 @@ AWK_SCRIPT="$SCRIPTS_DIR/git_render.awk"
 	printf '%s\n' "$result" | grep -q "abcdefg\.\.\."
 }
 
+@test "cell truncated when max_widths less than tail length does not exceed max_widths" {
+	result=$(printf 'PATH\nabcde\n' \
+		| awk -v styles="normal" -v max_widths="2" -v home="" -f "$AWK_SCRIPT")
+	data=$(printf '%s\n' "$result" | tail -1)
+	[ "${#data}" -le 2 ]
+}
+
 @test "cell at exact max_widths is not truncated" {
 	result=$(printf 'PATH\nabcdefghij\n' \
 		| awk -v styles="normal" -v max_widths="10" -v home="" -f "$AWK_SCRIPT")

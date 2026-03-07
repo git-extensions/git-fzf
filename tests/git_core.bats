@@ -67,6 +67,17 @@ teardown() {
 	[ -z "$result" ]
 }
 
+@test "_git_root returns non-empty string inside a bare repo" {
+	BARE_REPO=$(mktemp -d)
+	rmdir "$BARE_REPO"
+	git clone --bare "$TEST_REPO" "$BARE_REPO"
+	cd "$BARE_REPO"
+	source "$SCRIPTS_DIR/git_core.sh"
+	result=$(_git_root)
+	rm -rf "$BARE_REPO"
+	[ -n "$result" ]
+}
+
 # ---------------------------------------------------------------------------
 # _git_opener
 # ---------------------------------------------------------------------------

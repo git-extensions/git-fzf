@@ -55,8 +55,10 @@ BEGIN {
 
 function truncate(s, maxw,    tail) {
     tail = "..."
-    if (maxw > 0 && length(s) > maxw)
+    if (maxw > 0 && length(s) > maxw) {
+        if (maxw <= length(tail)) return substr(tail, 1, maxw)
         return substr(s, 1, maxw - length(tail)) tail
+    }
     return s
 }
 
