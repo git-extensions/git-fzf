@@ -77,6 +77,20 @@ _git_fzf_options() {
 	fi
 }
 
+# _git_expand_path()
+#
+# Expand a leading ~ to $HOME in a path.
+#
+# PARAMETERS:
+#   $1 - Path to expand (absolute or ~/…)
+#
+# RETURNS:
+#   Expanded path printed to stdout.
+#
+_git_expand_path() {
+	printf '%s' "${1/#~/$HOME}"
+}
+
 # _git_open()
 #
 # Open a path in the system file manager, expanding a leading ~ to $HOME.
@@ -85,7 +99,8 @@ _git_fzf_options() {
 #   $1 - Path to open (absolute or ~/…)
 #
 _git_open() {
-	local path="${1/#~/$HOME}"
+	local path
+	path=$(_git_expand_path "$1")
 	if [[ "$OSTYPE" == "darwin"* ]]; then
 		open "$path"
 	else
@@ -114,9 +129,9 @@ _git_is_repo() {
 #
 _git_root() {
 	local root
-	root=$(git rev-parse --show-toplevel 2>/dev/null) \
-		|| root=$(git rev-parse --absolute-git-dir 2>/dev/null) \
-		|| return 0
+	root=$(git rev-parse --show-toplevel 2>/dev/null) ||
+		root=$(git rev-parse --absolute-git-dir 2>/dev/null) ||
+		return 0
 	if [[ "$root" == "$HOME" || "$root" == "$HOME/"* ]]; then
 		printf '%s\n' "~${root#"$HOME"}"
 	else
@@ -132,6 +147,6 @@ _git_root() {
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 	case "${1:-}" in
 	open) _git_open "${2:-}" ;;
-	*)    git "$@" ;;
+	*) git "$@" ;;
 	esac
 fi

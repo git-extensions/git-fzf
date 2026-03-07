@@ -131,7 +131,7 @@ _show_version() {
 main() {
 	local fzf_flags=()
 	local cmd=""
-	local command_args=()
+	local cmd_args=()
 
 	# Parse arguments: everything before command = fzf flags, everything after = command args
 	while [[ $# -gt 0 ]]; do
@@ -147,7 +147,7 @@ main() {
 		worktree)
 			cmd="$1"
 			shift
-			command_args=("$@")
+			cmd_args=("$@")
 			break
 			;;
 		*)
@@ -171,7 +171,7 @@ main() {
 	# commands are reachable here.
 	if [[ "$cmd" == "worktree" ]]; then
 		_check_dependencies
-		_git_worktree_list "${command_args[@]}"
+		_git_worktree_list "${cmd_args[@]}"
 	else
 		_show_help
 	fi

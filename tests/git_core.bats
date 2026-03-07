@@ -81,19 +81,25 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
-# _git_opener
+# _git_expand_path
 # ---------------------------------------------------------------------------
 
-@test "_git_opener returns a non-empty string" {
+@test "_git_expand_path expands leading ~ to HOME" {
 	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_opener)
-	[ -n "$result" ]
+	result=$(_git_expand_path "~/foo/bar")
+	[ "$result" = "$HOME/foo/bar" ]
 }
 
-@test "_git_opener returns open or xdg-open" {
+@test "_git_expand_path leaves absolute paths unchanged" {
 	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_opener)
-	[[ "$result" == "open" || "$result" == "xdg-open" ]]
+	result=$(_git_expand_path "/tmp/foo")
+	[ "$result" = "/tmp/foo" ]
+}
+
+@test "_git_expand_path does not expand ~ in the middle of a path" {
+	source "$SCRIPTS_DIR/git_core.sh"
+	result=$(_git_expand_path "/foo/~/bar")
+	[ "$result" = "/foo/~/bar" ]
 }
 
 # ---------------------------------------------------------------------------

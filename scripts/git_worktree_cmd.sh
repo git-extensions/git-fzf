@@ -159,7 +159,7 @@ main() {
 			gum log --level error "remove requires a worktree path"
 			exit 1
 		fi
-		git worktree remove "${1/#~/$HOME}" "${@:2}"
+		git worktree remove "$(_git_expand_path "$1")" "${@:2}"
 		;;
 	prune)
 		git worktree prune
