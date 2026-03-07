@@ -49,8 +49,11 @@ _git_worktree_list() {
 		return 1
 	fi
 
+	local git_worktree_cmd
+	git_worktree_cmd="$_git_worktree_source_dir/git_worktree_cmd.sh"
+
 	local git_worktree_list
-	git_worktree_list=$("$_git_worktree_source_dir/git_worktree_cmd.sh")
+	git_worktree_list=$("$git_worktree_cmd")
 
 	if [[ -z "$git_worktree_list" ]]; then
 		gum log --level error "No git worktrees found."
@@ -59,9 +62,6 @@ _git_worktree_list() {
 
 	local git_root
 	git_root=$(_git_root)
-
-	local git_worktree_reload
-	git_worktree_reload="$_git_worktree_source_dir/git_worktree_cmd.sh"
 
 	# Build fzf options with user-provided flags
 	_git_fzf_options "WORKTREE"
@@ -72,10 +72,10 @@ _git_worktree_list() {
 		--accept-nth 1 \
 		--footer "$_fzf_icon Git Worktrees $_fzf_split $git_root" \
 		--preview-label " Keyboard Shortcuts " \
-		--preview "$_git_worktree_source_dir/git_worktree_cmd.sh preview-help" \
+		--preview "$git_worktree_cmd preview-help" \
 		--bind "ctrl-o:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Opening...)+execute-silent($_git_worktree_source_dir/git_core.sh open {1})" \
-		--bind "ctrl-r:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Reloading...)+reload($git_worktree_reload)" \
-		--bind "alt-p:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Pruning...)+execute-silent($_git_worktree_source_dir/git_worktree_cmd.sh prune)+reload($git_worktree_reload)" \
-		--bind "alt-x:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Removing...)+execute-silent($_git_worktree_source_dir/git_worktree_cmd.sh remove {1})+reload($git_worktree_reload)" \
+		--bind "ctrl-r:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Reloading...)+reload($git_worktree_cmd)" \
+		--bind "alt-p:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Pruning...)+execute-silent($git_worktree_cmd prune)+reload($git_worktree_cmd)" \
+		--bind "alt-x:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Removing...)+execute-silent($git_worktree_cmd remove {1})+reload($git_worktree_cmd)" \
 		--bind "alt-h:toggle-preview"
 }
