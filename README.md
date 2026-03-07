@@ -96,7 +96,7 @@ export GIT_FZF_WORKTREE_OPTS="--tmux 80%,80%"
 
 ## Development
 
-A Nix dev shell provides all required tools (bash, git, fzf, gum, gawk, bats, shellcheck):
+A Nix dev shell provides all required tools (bash, git, fzf, gum, bats, shellcheck):
 
 ```bash
 nix develop

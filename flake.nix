@@ -16,7 +16,7 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        runtimeDeps = with pkgs; [ fzf gum gawk ];
+        runtimeDeps = with pkgs; [ fzf gum ];
       in
       {
         packages.default = pkgs.stdenv.mkDerivation {
@@ -51,7 +51,6 @@
             git
             fzf
             gum
-            gawk
             bats
             shellcheck
           ];

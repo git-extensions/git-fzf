@@ -17,7 +17,7 @@ _git_fzf_source_dir=$(
 
 # Verify required dependencies are installed
 #
-# Checks that Bash 4.4+, git, fzf, gum, and gawk are available.
+# Checks that Bash 4.4+, git, fzf, and gum are available.
 # Prints installation instructions and exits if any are missing.
 _check_dependencies() {
 	if [[ "${BASH_VERSINFO[0]}" -lt 4 || ("${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -lt 4) ]]; then
@@ -36,9 +36,6 @@ _check_dependencies() {
 	fi
 	if ! command -v gum &>/dev/null; then
 		missing+=("gum     — https://github.com/charmbracelet/gum")
-	fi
-	if ! command -v gawk &>/dev/null; then
-		missing+=("gawk    — https://www.gnu.org/software/gawk/")
 	fi
 
 	if [[ ${#missing[@]} -gt 0 ]]; then
