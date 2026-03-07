@@ -13,7 +13,18 @@ source "$_git_worktree_cmd_source_dir/git_core.sh"
 # This file is sourced by git_worktree.sh and provides
 # worktree listing and command dispatch functionality.
 
-# _git_worktree_list_raw()
+# _git_worktree_emit_row()
+#
+# Emit one tab-separated worktree row to stdout.
+#
+# PARAMETERS:
+#   $1 - absolute path   $2 - branch   $3 - sha7   $4 - commit subject
+#
+_git_worktree_emit_row() {
+	printf "%s\t%s\t%s\t%s\n" "${1/#"$HOME"/\~}" "${2:-HEAD}" "${3:-}" "${4:-}"
+}
+
+# _git_worktree_list_porcelain()
 #
 # Parse 'git worktree list --porcelain' and emit tab-separated rows.
 #
@@ -29,7 +40,7 @@ source "$_git_worktree_cmd_source_dir/git_core.sh"
 #   Tab-separated rows (no header), one per worktree. Empty output when not
 #   in a git repo or no worktrees exist.
 #
-_git_worktree_list_raw() {
+_git_worktree_list_porcelain() {
 	local worktrees
 	worktrees=$(git worktree list --porcelain 2>/dev/null) || return 0
 	[[ -z "$worktrees" ]] && return 0
@@ -52,11 +63,8 @@ _git_worktree_list_raw() {
 			[[ $detached -eq 1 ]] && branch="(detached)"
 			local msg
 			msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
-			printf "%s\t%s\t%s\t%s\n" "${path/#"$HOME"/\~}" "${branch:-HEAD}" "${sha:-}" "${msg:-}"
-			path=""
-			sha=""
-			branch=""
-			detached=0
+			_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
+			path=""; sha=""; branch=""; detached=0
 		fi
 	done <<<"$worktrees"
 
@@ -65,7 +73,7 @@ _git_worktree_list_raw() {
 		[[ $detached -eq 1 ]] && branch="(detached)"
 		local msg
 		msg=$(git log -1 --format="%s" "$sha" 2>/dev/null || echo "")
-		printf "%s\t%s\t%s\t%s\n" "${path/#"$HOME"/\~}" "${branch:-HEAD}" "${sha:-}" "${msg:-}"
+		_git_worktree_emit_row "$path" "$branch" "$sha" "$msg"
 	fi
 }
 
@@ -128,7 +136,7 @@ main() {
 
 	case "$subcommand" in
 	list)
-		_git_worktree_list_raw
+		_git_worktree_list_porcelain
 		;;
 	preview-help)
 		_git_worktree_preview_help
