@@ -9,10 +9,10 @@ for every common worktree action.
 
 ## Prerequisites
 
-- [fzf](https://github.com/junegunn/fzf) — `brew install fzf`
-- [gum](https://github.com/charmbracelet/gum) — `brew install gum`
-- [git](https://git-scm.com) — `brew install git`
+- [Git](https://git-scm.com/) — `brew install git`
 - [Bash](https://www.gnu.org/software/bash/) 4.4+ — `brew install bash` (macOS ships 3.x)
+- [fzf](https://github.com/junegunn/fzf) — `brew install fzf`
+- [Gum](https://github.com/charmbracelet/gum) — `brew install gum`
 
 ## Installation
 
