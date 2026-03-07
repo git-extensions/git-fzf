@@ -66,6 +66,9 @@ END {
             maxw = (c <= n_maxw) ? maxw_arr[c] + 0 : 0
 
             # Truncate data rows (never truncate the header)
+            # Keep orig_val for style checks — status colours must match the
+            # original value, not the potentially-truncated display value.
+            orig_val = val
             if (r > 1)
                 val = truncate(val, maxw)
 
@@ -85,7 +88,7 @@ END {
                 } else if (st == "faint") {
                     cell = FAINT padded RESET
                 } else if (st == "status") {
-                    if (val == "(detached)" || val == "(bare)")
+                    if (orig_val == "(detached)" || orig_val == "(bare)")
                         cell = YELLOW padded RESET
                     else
                         cell = padded

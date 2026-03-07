@@ -39,7 +39,7 @@ source "$_git_worktree_source_dir/git_core.sh"
 _git_worktree_list() {
 	if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
 		git worktree --help
-		return $?
+		return
 	fi
 
 	if ! _git_is_repo; then

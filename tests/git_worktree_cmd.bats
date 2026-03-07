@@ -90,3 +90,28 @@ teardown() {
 	[ ! -d "$TEST_REPO-wt" ]
 }
 
+# ---------------------------------------------------------------------------
+# list subcommand (raw TSV)
+# ---------------------------------------------------------------------------
+
+@test "list subcommand emits tab-separated rows" {
+	cd "$TEST_REPO"
+	run "$CMD" list
+	[ "$status" -eq 0 ]
+	# Each row should contain at least one tab
+	echo "${lines[0]}" | grep -q $'\t'
+}
+
+@test "list subcommand includes main worktree path" {
+	cd "$TEST_REPO"
+	run "$CMD" list
+	[ "$status" -eq 0 ]
+	echo "$output" | grep -q "$TEST_REPO"
+}
+
+@test "list subcommand includes branch name" {
+	cd "$TEST_REPO"
+	run "$CMD" list
+	[ "$status" -eq 0 ]
+	echo "$output" | grep -q "wt-branch"
+}

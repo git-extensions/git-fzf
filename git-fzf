@@ -95,13 +95,6 @@ EXAMPLES:
     # Basic usage
     git fzf worktree                    # Browse worktrees interactively
 
-    # Shell integration (add to ~/.bashrc or ~/.zshrc)
-    gw() {
-      local path
-      path=$(git fzf worktree)
-      [ -n "$path" ] && cd "$path"
-    }
-
     # With fzf flags (tmux popup)
     git fzf --tmux worktree             # Open in tmux popup (default size)
     git fzf --tmux "80%,80%" worktree   # Open in tmux popup (80% size)
