@@ -122,8 +122,6 @@ DEBUG=1 git fzf worktree
 ## See Also
 
 - [git-ai](https://github.com/git-extensions/git-ai) — AI-powered commit messages for git
-- [gh-fzf](https://github.com/gh-extensions/gh-fzf) — Fuzzy finder for the GitHub CLI
-- [gh-ai](https://github.com/gh-extensions/gh-ai) — AI-powered copilot for the GitHub CLI
 
 ## License
 
