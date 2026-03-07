@@ -98,6 +98,7 @@ _git_worktree_cmd_list() {
 #
 # RETURNS:
 #   Colored table with header + one row per worktree.
+#   Empty output (exit 0) when there are no worktrees to display.
 #
 _git_worktree_list_cmd() {
 	local raw
@@ -154,6 +155,10 @@ main() {
 		;;
 	remove)
 		shift
+		if [[ -z "${1:-}" ]]; then
+			gum log --level error "remove requires a worktree path"
+			exit 1
+		fi
 		git worktree remove "$@"
 		;;
 	prune)
@@ -163,7 +168,7 @@ main() {
 		_git_worktree_list_cmd
 		;;
 	*)
-		echo "git_worktree_cmd.sh: unknown subcommand '$subcommand'" >&2
+		gum log --level error "unknown subcommand '$subcommand'"
 		exit 1
 		;;
 	esac

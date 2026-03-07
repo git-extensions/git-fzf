@@ -4,6 +4,21 @@
 
 set -euo pipefail
 
+# Resolve symlinks so scripts/ is found even when git-fzf is symlinked onto PATH
+_git_fzf_source_dir=$(
+	_src="${BASH_SOURCE[0]}"
+	while [[ -L "$_src" ]]; do
+		_dir=$(cd -P "$(dirname "$_src")" && pwd)
+		_src=$(readlink "$_src")
+		[[ "$_src" != /* ]] && _src="$_dir/$_src"
+	done
+	cd -P "$(dirname "$_src")" && pwd
+)
+
+# Verify required dependencies are installed
+#
+# Checks that Bash 4.4+, git, fzf, gum, and gawk are available.
+# Prints installation instructions and exits if any are missing.
 _check_dependencies() {
 	if [[ "${BASH_VERSINFO[0]}" -lt 4 || ("${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -lt 4) ]]; then
 		echo "git-fzf: requires Bash 4.4+ (found ${BASH_VERSION})" >&2
@@ -22,8 +37,8 @@ _check_dependencies() {
 	if ! command -v gum &>/dev/null; then
 		missing+=("gum     — https://github.com/charmbracelet/gum")
 	fi
-	if ! command -v awk &>/dev/null; then
-		missing+=("awk     — install gawk or nawk via your package manager")
+	if ! command -v gawk &>/dev/null; then
+		missing+=("gawk    — https://www.gnu.org/software/gawk/")
 	fi
 
 	if [[ ${#missing[@]} -gt 0 ]]; then
@@ -35,21 +50,14 @@ _check_dependencies() {
 	fi
 }
 
-# Resolve symlinks so scripts/ is found even when git-fzf is symlinked onto PATH
-_git_fzf_source_dir=$(
-	_src="${BASH_SOURCE[0]}"
-	while [[ -L "$_src" ]]; do
-		_dir=$(cd -P "$(dirname "$_src")" && pwd)
-		_src=$(readlink "$_src")
-		[[ "$_src" != /* ]] && _src="$_dir/$_src"
-	done
-	cd -P "$(dirname "$_src")" && pwd
-)
-
-# Source command implementations
+# Source command modules
 source "$_git_fzf_source_dir/scripts/git_worktree.sh"
 
-_show_root_help() {
+# Help function
+#
+# Displays comprehensive help information for all commands
+# including usage examples and available options.
+_show_help() {
 	cat <<'EOF'
 git-fzf - Interactive fuzzy finder for Git CLI
 
@@ -115,6 +123,14 @@ DEBUG:
 EOF
 }
 
+# Version function
+#
+# Reads and displays the current version from version.txt.
+_show_version() {
+	cat "$_git_fzf_source_dir/version.txt"
+}
+
+# Main entry point
 main() {
 	local fzf_flags=()
 	local cmd=""
@@ -123,12 +139,12 @@ main() {
 	# Parse arguments: everything before command = fzf flags, everything after = command args
 	while [[ $# -gt 0 ]]; do
 		case "$1" in
-		--version)
-			cat "$_git_fzf_source_dir/version.txt"
+		--version | -V)
+			_show_version
 			exit 0
 			;;
 		--help | -h | help)
-			_show_root_help
+			_show_help
 			exit 0
 			;;
 		worktree)
@@ -160,7 +176,7 @@ main() {
 		_check_dependencies
 		_git_worktree_list "${command_args[@]}"
 	else
-		_show_root_help
+		_show_help
 	fi
 }
 

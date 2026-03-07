@@ -35,12 +35,13 @@
               --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}
           '';
 
-          meta = {
+          meta = with pkgs.lib; {
             description = "Interactive fuzzy finder for Git";
             homepage = "https://github.com/git-extensions/git-fzf";
-            license = pkgs.lib.licenses.mit;
+            license = licenses.mit;
             maintainers = [ ];
-            platforms = pkgs.lib.platforms.unix;
+            mainProgram = "git-fzf";
+            platforms = platforms.unix;
           };
         };
 

@@ -84,7 +84,7 @@ END {
 
             # Truncate data rows (never truncate the header)
             # Keep orig_val for style checks — status colours must match the
-            # original value, not the potentially-truncated display value.
+            # pre-truncation value, not the truncated display string.
             orig_val = val
             if (r > 1)
                 val = truncate(val, maxw)

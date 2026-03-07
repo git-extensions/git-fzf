@@ -40,12 +40,12 @@ source "$_git_worktree_source_dir/git_core.sh"
 #
 _git_worktree_list() {
 	if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-		git worktree list --help
+		git worktree --help
 		return
 	fi
 
 	if ! _git_is_repo; then
-		gum log --level warn "Not inside a git repository."
+		gum log --level error "Not inside a git repository."
 		return 1
 	fi
 
@@ -53,7 +53,7 @@ _git_worktree_list() {
 	git_worktree_list=$("$_git_worktree_source_dir/git_worktree_cmd.sh")
 
 	if [[ -z "$git_worktree_list" ]]; then
-		gum log --level warn "No git worktrees found."
+		gum log --level error "No git worktrees found."
 		return 1
 	fi
 
