@@ -77,18 +77,19 @@ _git_fzf_options() {
 	fi
 }
 
-# _git_opener()
+# _git_open()
 #
-# Print the available file manager opener command.
+# Open a path in the system file manager, expanding a leading ~ to $HOME.
 #
-# RETURNS:
-#   "open" on macOS, "xdg-open" otherwise.
+# PARAMETERS:
+#   $1 - Path to open (absolute or ~/…)
 #
-_git_opener() {
+_git_open() {
+	local path="${1/#~/$HOME}"
 	if [[ "$OSTYPE" == "darwin"* ]]; then
-		printf '%s\n' "open"
+		open "$path"
 	else
-		printf '%s\n' "xdg-open"
+		xdg-open "$path"
 	fi
 }
 
@@ -126,8 +127,11 @@ _git_root() {
 # ------------------------------------------------------------------------------
 # Direct Execution Support
 # ------------------------------------------------------------------------------
-# When run directly (not sourced), pass all arguments to git.
+# When run directly (not sourced), dispatch to the appropriate function.
 # ------------------------------------------------------------------------------
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-	git "$@"
+	case "${1:-}" in
+	open) _git_open "${2:-}" ;;
+	*)    git "$@" ;;
+	esac
 fi
