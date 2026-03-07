@@ -73,8 +73,8 @@ _git_worktree_list() {
 		--footer "$_fzf_icon Git Worktrees $_fzf_split $git_root" \
 		--preview-label " Keyboard Shortcuts " \
 		--preview "$git_worktree_cmd preview-help" \
-		--bind "ctrl-o:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Opening...)+execute-silent($_git_worktree_source_dir/git_core.sh open {1})" \
 		--bind "ctrl-r:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Reloading...)+reload($git_worktree_cmd)" \
+		--bind "ctrl-o:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Opening...)+execute-silent($_git_worktree_source_dir/git_core.sh open {1})" \
 		--bind "alt-p:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Pruning...)+execute-silent($git_worktree_cmd prune)+reload($git_worktree_cmd)" \
 		--bind "alt-x:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Removing...)+execute-silent($git_worktree_cmd remove {1})+reload($git_worktree_cmd)" \
 		--bind "alt-h:toggle-preview"
