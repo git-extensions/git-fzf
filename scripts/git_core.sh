@@ -86,9 +86,9 @@ _git_fzf_options() {
 #
 _git_opener() {
 	if [[ "$OSTYPE" == "darwin"* ]]; then
-		echo "open"
+		printf '%s\n' "open"
 	else
-		echo "xdg-open"
+		printf '%s\n' "xdg-open"
 	fi
 }
 

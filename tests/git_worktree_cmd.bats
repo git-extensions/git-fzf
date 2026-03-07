@@ -37,8 +37,8 @@ teardown() {
 	cd "$TEST_REPO"
 	run "$CMD"
 	[ "$status" -eq 0 ]
-	# The repo path should appear somewhere in output
-	echo "$output" | grep -q "$TEST_REPO"
+	# Match either absolute or ~/... form (emit_row substitutes $HOME with ~)
+	echo "$output" | grep -q "${TEST_REPO/#$HOME/\~}"
 }
 
 @test "git_worktree_cmd.sh lists secondary worktree" {
@@ -108,7 +108,7 @@ teardown() {
 	cd "$TEST_REPO"
 	run "$CMD" list
 	[ "$status" -eq 0 ]
-	echo "$output" | grep -q "$TEST_REPO"
+	echo "$output" | grep -q "${TEST_REPO/#$HOME/\~}"
 }
 
 @test "list subcommand includes branch name" {

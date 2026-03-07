@@ -1,5 +1,5 @@
 {
-  description = "git-fzf development shell";
+  description = "git-fzf — interactive fuzzy finder for Git";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -48,7 +48,7 @@
           ];
 
           shellHook = ''
-            if ! fzf --version | awk -F'[. ]' '$1>=0 && $2>=54 {found=1} END {exit !found}' 2>/dev/null; then
+            if ! fzf --version | awk -F'[. ]' '$1>0 || ($1==0 && $2>=54) {found=1} END {exit !found}' 2>/dev/null; then
               echo "warning: fzf 0.54+ recommended — some keybindings may not work with older versions"
             fi
           '';

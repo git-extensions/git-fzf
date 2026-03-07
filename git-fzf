@@ -37,7 +37,16 @@ _check_dependencies() {
 
 _check_dependencies
 
-_git_fzf_source_dir=$(dirname "${BASH_SOURCE[0]}")
+# Resolve symlinks so scripts/ is found even when git-fzf is symlinked onto PATH
+_git_fzf_source_dir=$(
+	_src="${BASH_SOURCE[0]}"
+	while [[ -L "$_src" ]]; do
+		_dir=$(cd -P "$(dirname "$_src")" && pwd)
+		_src=$(readlink "$_src")
+		[[ "$_src" != /* ]] && _src="$_dir/$_src"
+	done
+	cd -P "$(dirname "$_src")" && pwd
+)
 
 # Source command implementations
 source "$_git_fzf_source_dir/scripts/git_worktree.sh"

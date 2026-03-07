@@ -77,7 +77,7 @@ _git_worktree_list() {
 		--bind "load:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root)" \
 		--bind "ctrl-o:execute-silent($git_opener {1})" \
 		--bind "ctrl-r:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_root $_fzf_split Reloading...)+reload($git_worktree_reload)" \
-		--bind "alt-x:execute-silent($_git_worktree_source_dir/git_worktree_cmd.sh remove {1})+reload($git_worktree_reload)" \
+		--bind "alt-x:execute($_git_worktree_source_dir/git_worktree_cmd.sh remove {1})+reload($git_worktree_reload)" \
 		--bind "alt-p:execute-silent($_git_worktree_source_dir/git_worktree_cmd.sh prune)+reload($git_worktree_reload)" \
 		--bind "alt-h:toggle-preview"
 }
