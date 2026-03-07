@@ -27,8 +27,9 @@
           nativeBuildInputs = [ pkgs.makeWrapper ];
 
           installPhase = ''
-            mkdir -p $out/share/git-fzf $out/bin
-            cp -r * $out/share/git-fzf/
+            mkdir -p $out/share/git-fzf/scripts $out/bin
+            cp git-fzf version.txt $out/share/git-fzf/
+            cp scripts/*.sh scripts/*.awk $out/share/git-fzf/scripts/
             chmod +x $out/share/git-fzf/git-fzf $out/share/git-fzf/scripts/*.sh
             makeWrapper $out/share/git-fzf/git-fzf $out/bin/git-fzf \
               --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}

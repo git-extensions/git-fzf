@@ -1,7 +1,7 @@
 # git_render.awk — two-pass TSV renderer with per-column ANSI styling
 #
 # USAGE:
-#   { printf "COL1\tCOL2\n"; echo "$data"; } | \
+#   { printf "COL1\tCOL2\n"; printf '%s\n' "$data"; } | \
 #       awk -v styles="bold,status,faint,faint" \
 #           -v max_widths="0,35,0,0" \
 #           -f git_render.awk

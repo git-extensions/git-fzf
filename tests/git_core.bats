@@ -8,6 +8,8 @@ setup() {
 	# Create a temp git repo for is_repo / root tests
 	TEST_REPO=$(mktemp -d)
 	git -C "$TEST_REPO" init -q
+	git -C "$TEST_REPO" config user.email "test@test.com"
+	git -C "$TEST_REPO" config user.name "Test"
 	git -C "$TEST_REPO" commit --allow-empty -m "init"
 	TEST_OUTSIDE=$(mktemp -d)
 }

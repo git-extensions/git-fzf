@@ -110,7 +110,7 @@ EOF
 
 main() {
 	local fzf_flags=()
-	local command=""
+	local cmd=""
 	local command_args=()
 
 	# Parse arguments: everything before command = fzf flags, everything after = command args
@@ -125,7 +125,7 @@ main() {
 			exit 0
 			;;
 		worktree)
-			command="$1"
+			cmd="$1"
 			shift
 			command_args=("$@")
 			break
@@ -146,7 +146,7 @@ main() {
 	fi
 
 	# Dispatch to command with remaining args
-	case "$command" in
+	case "$cmd" in
 	worktree)
 		_git_worktree_list "${command_args[@]}"
 		;;
@@ -154,7 +154,7 @@ main() {
 		_show_root_help
 		;;
 	*)
-		gum log --level error "Unknown command '$command'"
+		gum log --level error "Unknown command '$cmd'"
 		gum log --level info "Available commands: worktree"
 		gum log --level info "Run 'git fzf --help' for detailed usage information"
 		exit 1

@@ -9,6 +9,8 @@ setup() {
 	# Create a temp git repo with a commit so worktrees work
 	TEST_REPO=$(mktemp -d)
 	git -C "$TEST_REPO" init -q
+	git -C "$TEST_REPO" config user.email "test@test.com"
+	git -C "$TEST_REPO" config user.name "Test"
 	git -C "$TEST_REPO" commit --allow-empty -m "Initial commit"
 
 	# Create an extra worktree

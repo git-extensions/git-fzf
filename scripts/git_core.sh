@@ -85,7 +85,7 @@ _git_fzf_options() {
 #   "open" on macOS, "xdg-open" otherwise.
 #
 _git_opener() {
-	if command -v open &>/dev/null; then
+	if [[ "$OSTYPE" == "darwin"* ]]; then
 		echo "open"
 	else
 		echo "xdg-open"
@@ -100,7 +100,7 @@ _git_opener() {
 #   0 if inside a git repository, 1 otherwise.
 #
 _git_is_repo() {
-	git rev-parse --is-inside-work-tree &>/dev/null
+	[[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" == "true" ]]
 }
 
 # _git_root()
