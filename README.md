@@ -1,11 +1,7 @@
 # git-fzf
 
-A fuzzy finder for Git. Jump between worktrees, open directories, and manage
-stale branches — without leaving the terminal.
-
-Stop typing `git worktree list` and copying paths. `git fzf` gives you an
-interactive browser with a header, colored columns, and keyboard shortcuts
-for every common worktree action.
+A fuzzy finder for Git. Browse local repositories, jump between worktrees, open
+directories, and manage stale branches — without leaving the terminal.
 
 ## Prerequisites
 
@@ -13,6 +9,7 @@ for every common worktree action.
 - [Bash](https://www.gnu.org/software/bash/) 4.4+ — `brew install bash` (macOS ships 3.x)
 - [fzf](https://github.com/junegunn/fzf) — `brew install fzf`
 - [Gum](https://github.com/charmbracelet/gum) — `brew install gum`
+- [fd](https://github.com/sharkdp/fd) — `brew install fd` *(required for `repo` command)*
 
 ## Installation
 
@@ -67,6 +64,26 @@ git fzf --tmux "80%,80%" worktree   # custom popup size
 git fzf --height 50% worktree       # fixed height
 ```
 
+## Repositories
+
+Browse local repositories under your configured projects directory. Selecting
+one and pressing **Enter** prints the path to stdout.
+
+```bash
+git fzf repo
+```
+
+### Keybindings
+
+| Key      | Action                                                           |
+| -------- | ---------------------------------------------------------------- |
+| `ctrl-o` | Open repository directory in file manager (`open` / `xdg-open`) |
+| `ctrl-r` | Reload repository list                                           |
+| `alt-s`  | Open repository in a new tmux session *(requires tmux)*          |
+| `alt-w`  | Open repository in a new tmux window *(requires tmux)*           |
+| `alt-h`  | Toggle keyboard shortcut preview                                 |
+| `ESC`    | Exit                                                             |
+
 ## Worktrees
 
 Browse all worktrees interactively. Selecting one and pressing **Enter**
@@ -84,19 +101,36 @@ git fzf worktree
 | `ctrl-r` | Reload worktree list                                          |
 | `alt-x`  | Remove selected worktree (`git worktree remove`)              |
 | `alt-p`  | Prune stale worktrees (`git worktree prune`) + reload         |
+| `alt-s`  | Open worktree in a new tmux session *(requires tmux)*         |
+| `alt-w`  | Open worktree in a new tmux window *(requires tmux)*          |
 | `alt-h`  | Toggle keyboard shortcut preview                              |
 | `ESC`    | Exit                                                          |
 
 ## Configuration
+
+### Repository path
+
+Set the root directory scanned by `git fzf repo` (default: `~/Projects`):
+
+```bash
+# git config (persistent)
+git config --global fzf.repoPath ~/Work
+
+# Environment variable (takes precedence over git config)
+export GIT_FZF_REPO_PATH=~/Work
+```
+
+### fzf options
 
 Override fzf options per command via environment variables:
 
 | Variable                | Scope          | Description                            |
 | ----------------------- | -------------- | -------------------------------------- |
 | `GIT_FZF_FLAGS`         | All commands   | Set automatically from CLI fzf flags   |
+| `GIT_FZF_REPO_OPTS`     | Repo only      | Override any fzf option for repos      |
 | `GIT_FZF_WORKTREE_OPTS` | Worktree only  | Override any fzf option for worktrees  |
 
-Precedence: **Defaults** < **`GIT_FZF_FLAGS`** < **`GIT_FZF_WORKTREE_OPTS`**
+Precedence: **Defaults** < **`GIT_FZF_FLAGS`** < **`GIT_FZF_<COMMAND>_OPTS`**
 
 The format is the same as `FZF_DEFAULT_OPTS`: space-separated fzf options, with shell quoting for values that contain spaces or special characters.
 
@@ -114,7 +148,7 @@ export GIT_FZF_WORKTREE_OPTS="--height=90% --bind 'alt-O:execute(code {})'"
 
 ## Development
 
-A Nix dev shell provides all required tools (bash, git, fzf, gum, bats, shellcheck):
+A Nix dev shell provides all required tools (bash, git, fzf, gum, fd, bats, shellcheck):
 
 ```bash
 nix develop
@@ -136,6 +170,7 @@ Enable debug trace:
 
 ```bash
 DEBUG=1 git fzf worktree
+DEBUG=1 git fzf repo
 ```
 
 ## See Also
