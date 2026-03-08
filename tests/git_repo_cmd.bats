@@ -21,6 +21,40 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
+# projects-dir subcommand
+# ---------------------------------------------------------------------------
+
+@test "projects-dir returns GIT_FZF_REPO_PATH when set" {
+	GIT_FZF_REPO_PATH="$TEST_PROJECTS" run "$CMD" projects-dir
+	[ "$status" -eq 0 ]
+	[ "$output" = "$TEST_PROJECTS" ]
+}
+
+@test "projects-dir returns git config value when env not set" {
+	git config --global fzf.repoDir "$TEST_PROJECTS"
+	run "$CMD" projects-dir
+	git config --global --unset fzf.repoDir
+	[ "$status" -eq 0 ]
+	[ "$output" = "$TEST_PROJECTS" ]
+}
+
+@test "projects-dir env takes precedence over git config" {
+	OTHER_DIR=$(mktemp -d)
+	git config --global fzf.repoDir "$OTHER_DIR"
+	GIT_FZF_REPO_PATH="$TEST_PROJECTS" run "$CMD" projects-dir
+	git config --global --unset fzf.repoDir
+	rm -rf "$OTHER_DIR"
+	[ "$status" -eq 0 ]
+	[ "$output" = "$TEST_PROJECTS" ]
+}
+
+@test "projects-dir expands tilde" {
+	GIT_FZF_REPO_PATH="~/Projects" run "$CMD" projects-dir
+	[ "$status" -eq 0 ]
+	[[ "$output" != *"~"* ]]
+}
+
+# ---------------------------------------------------------------------------
 # list subcommand
 # ---------------------------------------------------------------------------
 

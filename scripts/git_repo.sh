@@ -53,8 +53,8 @@ EOF
 	local git_repo_cmd
 	git_repo_cmd="$_git_repo_source_dir/git_repo_cmd.sh"
 
-	local projects_dir="${GIT_FZF_REPO_PATH:-$HOME/Projects}"
-	projects_dir="${projects_dir/#\~/$HOME}"
+	local projects_dir
+	projects_dir=$("$git_repo_cmd" projects-dir)
 
 	# Compute the fzf --with-nth field offset so only host/workspace/project is shown
 	# Projects dir depth + 2 gives the first slash-delimited field after the base path
