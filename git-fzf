@@ -96,10 +96,10 @@ ENVIRONMENT VARIABLES:
         Override fzf options for specific commands.
 
         Available variables:
+            GIT_FZF_REPOSITORY_OPTS           Repositories
             GIT_FZF_WORKTREE_OPTS       Worktrees
-            GIT_FZF_REPO_OPTS           Repositories
 
-    GIT_FZF_REPO_PATH
+    GIT_FZF_REPOSITORY_PATH
         Root directory to scan for repositories.
         Overrides git config. (default: ~/Projects)
         git config alternative: git config --global fzf.repoPath ~/Work
@@ -113,11 +113,11 @@ ENVIRONMENT VARIABLES:
 
     Examples:
         # Different heights per command
+        export GIT_FZF_REPOSITORY_OPTS="--height 90%"
         export GIT_FZF_WORKTREE_OPTS="--height 90%"
-        export GIT_FZF_REPO_OPTS="--height 90%"
 
         # Custom projects directory
-        export GIT_FZF_REPO_PATH="~/Work"
+        export GIT_FZF_REPOSITORY_PATH="~/Work"
 
         # Custom preview windows
         export GIT_FZF_WORKTREE_OPTS="--preview-window right:50%"
@@ -126,22 +126,22 @@ ENVIRONMENT VARIABLES:
         export GIT_FZF_WORKTREE_OPTS="--layout=reverse"
 
 COMMANDS:
-    worktree    Browse and interact with Git worktrees
     repository  Browse and navigate local git repositories (alias: repo)
+    worktree    Browse and interact with Git worktrees
 
 EXAMPLES:
     # Basic usage
-    git fzf worktree                    # Browse worktrees interactively
     git fzf repository                  # Browse local repositories
+    git fzf worktree                    # Browse worktrees interactively
 
     # With fzf flags (tmux popup)
-    git fzf --tmux worktree             # Open in tmux popup (default size)
-    git fzf --tmux "80%,80%" worktree   # Open in tmux popup (80% size)
-    git fzf --height 20 worktree        # Custom height
+    git fzf --tmux repository           # Open in tmux popup (default size)
+    git fzf --tmux "80%,80%" repository # Open in tmux popup (80% size)
+    git fzf --height 20 repository      # Custom height
 
 DEBUG:
-    DEBUG=1 git fzf worktree            # Enable debug trace
     DEBUG=1 git fzf repository          # Enable debug trace
+    DEBUG=1 git fzf worktree            # Enable debug trace
 EOF
 }
 

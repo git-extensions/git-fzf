@@ -18,7 +18,7 @@ directories, and manage stale branches — without leaving the terminal.
 Run directly without installing:
 
 ```bash
-nix run github:git-extensions/git-fzf -- worktree
+nix run github:git-extensions/git-fzf -- repository
 ```
 
 Or install into your profile:
@@ -59,9 +59,9 @@ git fzf --help
 Pass any fzf flags before the command — they are forwarded directly:
 
 ```bash
-git fzf --tmux worktree             # open in a tmux popup
-git fzf --tmux "80%,80%" worktree   # custom popup size
-git fzf --height 50% worktree       # fixed height
+git fzf --tmux repository            # open in a tmux popup
+git fzf --tmux "80%,80%" repository  # custom popup size
+git fzf --height 50% repository      # fixed height
 ```
 
 ## Repositories
@@ -75,14 +75,26 @@ git fzf repository
 
 ### Keybindings
 
-| Key      | Action                                                           |
-| -------- | ---------------------------------------------------------------- |
+| Key         | Action                                                           |
+| ----------- | ---------------------------------------------------------------- |
 | `ctrl-o`    | Open repository directory in file manager (`open` / `xdg-open`) |
 | `ctrl-r`    | Reload repository list                                           |
 | `alt-t`     | Open repository in a new tmux window *(requires tmux)*           |
 | `alt-enter` | Open repository in a new tmux session *(requires tmux)*          |
 | `alt-h`     | Toggle keyboard shortcut preview                                 |
 | `ESC`       | Exit                                                             |
+
+### Configuration
+
+Set the root directory scanned by `git fzf repository` (default: `~/Projects`):
+
+```bash
+# git config (persistent)
+git config --global fzf.repoPath ~/Work
+
+# Environment variable (takes precedence over git config)
+export GIT_FZF_REPOSITORY_PATH=~/Work
+```
 
 ## Worktrees
 
@@ -95,8 +107,8 @@ git fzf worktree
 
 ### Keybindings
 
-| Key      | Action                                                        |
-| -------- | ------------------------------------------------------------- |
+| Key         | Action                                                        |
+| ----------- | ------------------------------------------------------------- |
 | `ctrl-o`    | Open worktree directory in file manager (`open` / `xdg-open`) |
 | `ctrl-r`    | Reload worktree list                                          |
 | `alt-x`     | Remove selected worktree (`git worktree remove`)              |
@@ -108,27 +120,15 @@ git fzf worktree
 
 ## Configuration
 
-### Repository path
-
-Set the root directory scanned by `git fzf repository` (default: `~/Projects`):
-
-```bash
-# git config (persistent)
-git config --global fzf.repoPath ~/Work
-
-# Environment variable (takes precedence over git config)
-export GIT_FZF_REPO_PATH=~/Work
-```
-
 ### fzf options
 
 Override fzf options per command via environment variables:
 
-| Variable                | Scope          | Description                            |
-| ----------------------- | -------------- | -------------------------------------- |
-| `GIT_FZF_FLAGS`         | All commands   | Set automatically from CLI fzf flags   |
-| `GIT_FZF_REPO_OPTS`     | Repo only      | Override any fzf option for repos      |
-| `GIT_FZF_WORKTREE_OPTS` | Worktree only  | Override any fzf option for worktrees  |
+| Variable                | Scope            | Description                            |
+| ----------------------- | ---------------- | -------------------------------------- |
+| `GIT_FZF_FLAGS`         | All commands     | Set automatically from CLI fzf flags   |
+| `GIT_FZF_REPOSITORY_OPTS`     | Repository only  | Override any fzf option for repos      |
+| `GIT_FZF_WORKTREE_OPTS` | Worktree only    | Override any fzf option for worktrees  |
 
 Precedence: **Defaults** < **`GIT_FZF_FLAGS`** < **`GIT_FZF_<COMMAND>_OPTS`**
 
@@ -169,8 +169,8 @@ shellcheck -x --source-path=SCRIPTDIR git-fzf scripts/*.sh
 Enable debug trace:
 
 ```bash
-DEBUG=1 git fzf worktree
 DEBUG=1 git fzf repository
+DEBUG=1 git fzf worktree
 ```
 
 ## See Also

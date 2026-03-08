@@ -25,18 +25,18 @@ teardown() {
 # ---------------------------------------------------------------------------
 
 @test "list subcommand exits 0 with valid projects dir" {
-	GIT_FZF_REPO_PATH="$TEST_PROJECTS" run "$CMD" list
+	GIT_FZF_REPOSITORY_PATH="$TEST_PROJECTS" run "$CMD" list
 	[ "$status" -eq 0 ]
 }
 
 @test "list subcommand emits repo paths" {
-	GIT_FZF_REPO_PATH="$TEST_PROJECTS" run "$CMD" list
+	GIT_FZF_REPOSITORY_PATH="$TEST_PROJECTS" run "$CMD" list
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "myrepo"
 }
 
 @test "list subcommand emits multiple repos" {
-	GIT_FZF_REPO_PATH="$TEST_PROJECTS" run "$CMD" list
+	GIT_FZF_REPOSITORY_PATH="$TEST_PROJECTS" run "$CMD" list
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "myrepo"
 	echo "$output" | grep -q "otherrepo"
@@ -44,13 +44,13 @@ teardown() {
 
 @test "list subcommand exits 0 with empty projects dir" {
 	EMPTY_DIR=$(mktemp -d)
-	GIT_FZF_REPO_PATH="$EMPTY_DIR" run "$CMD" list
+	GIT_FZF_REPOSITORY_PATH="$EMPTY_DIR" run "$CMD" list
 	[ "$status" -eq 0 ]
 	rm -rf "$EMPTY_DIR"
 }
 
 @test "list subcommand output has no trailing slash" {
-	GIT_FZF_REPO_PATH="$TEST_PROJECTS" run "$CMD" list
+	GIT_FZF_REPOSITORY_PATH="$TEST_PROJECTS" run "$CMD" list
 	[ "$status" -eq 0 ]
 	# No line should end with /
 	! echo "$output" | grep -q '/$'
