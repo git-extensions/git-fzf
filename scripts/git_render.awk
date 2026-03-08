@@ -18,6 +18,9 @@
 #   max_widths  Comma-separated max character widths, one per column.
 #               0 means uncapped. Cells exceeding their max are truncated
 #               with a trailing "..." (3 chars included in the width budget).
+#   home        Path prefix to tilde-compress in column 1 data rows.
+#               Defaults to ENVIRON["HOME"]. Paths starting with home/ are
+#               displayed as ~/... ; others are unchanged.
 #
 # BEHAVIOUR:
 #   • Pass 1 (main rules): store every cell; track per-column max width.
@@ -36,6 +39,9 @@ BEGIN {
     ncols  = 0
     n_styles = split(styles,     style_arr, ",")
     n_maxw   = split(max_widths, maxw_arr,  ",")
+    if (home == "") home = ENVIRON["HOME"]
+    if (home != "" && substr(home, length(home)) != "/") home = home "/"
+    home_len = length(home)
     if (headers != "") {
         nrows = 1
         n = split(headers, hdr, ",")
@@ -52,8 +58,12 @@ BEGIN {
     nrows++
     if (NF > ncols) ncols = NF
     for (i = 1; i <= NF; i++) {
-        rows[nrows, i] = $i
-        w = length($i)
+        cell = $i
+        # Tilde-compress $HOME/ prefix in path column (col 1, data rows only)
+        if (i == 1 && nrows > 1 && home_len > 1 && substr(cell, 1, home_len) == home)
+            cell = "~/" substr(cell, home_len + 1)
+        rows[nrows, i] = cell
+        w = length(cell)
         if (w > col_width[i])
             col_width[i] = w
     }
