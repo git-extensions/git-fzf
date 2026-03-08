@@ -98,7 +98,9 @@ ENVIRONMENT VARIABLES:
             GIT_FZF_REPO_OPTS           Repositories
 
     GIT_FZF_REPO_PATH
-        Root directory to scan for repositories (default: ~/Projects)
+        Root directory to scan for repositories.
+        Overrides git config. (default: ~/Projects)
+        git config alternative: git config --global fzf.repoDir ~/Work
 
     Global fzf configuration (lower precedence):
 
