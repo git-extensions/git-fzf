@@ -169,7 +169,7 @@ main() {
 			_show_help
 			exit 0
 			;;
-		worktree | repo)
+		worktree | repository | repo)
 			cmd="$1"
 			shift
 			cmd_args=("$@")
