@@ -82,8 +82,8 @@ _git_worktree_list() {
 		local dir_basename
 		dir_basename="\$(basename {1})"
 
-		_fzf_options+=(--bind "alt-W:execute($git_tmux_cmd new-window worktrees/$dir_basename -c {1})")
-		_fzf_options+=(--bind "alt-S:execute($git_tmux_cmd new-session $git_repo_name/$dir_basename -c {1})")
+		_fzf_options+=(--bind "alt-W:execute-silent($git_tmux_cmd new-window worktrees/$dir_basename -c {1})+abort")
+		_fzf_options+=(--bind "alt-S:execute-silent($git_tmux_cmd new-session $git_repo_name/$dir_basename -c {1})+abort")
 	fi
 
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split set by sourced git_core.sh
