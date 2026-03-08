@@ -33,8 +33,8 @@ source "$_git_worktree_source_dir/git_core.sh"
 # KEYBOARD SHORTCUTS:
 #   ctrl-o    - Open directory in file manager (open / xdg-open)
 #   ctrl-r    - Reload worktree list
-#   alt-t     - Open worktree in new tmux window
-#   alt-enter - Open worktree in new tmux session
+#   enter     - Open worktree in new tmux session (tmux only)
+#   alt-enter - Open worktree in new tmux window (tmux only)
 #   alt-x     - Remove selected worktree
 #   alt-p     - Prune stale worktrees + reload
 #   alt-h     - Toggle preview (keyboard shortcuts)
@@ -87,8 +87,8 @@ _git_worktree_list() {
 		# shellcheck disable=SC2016
 		git_worktree_name='$(basename {1})'
 
-		_fzf_options+=(--bind "alt-t:execute-silent($git_tmux_cmd new-window worktrees/$git_worktree_name -c '{1}')+abort")
-		_fzf_options+=(--bind "alt-enter:execute-silent($git_tmux_cmd new-session $git_repo_name/$git_worktree_name -c '{1}')+abort")
+		_fzf_options+=(--bind "enter:execute-silent($git_tmux_cmd new-session $git_repo_name/$git_worktree_name -c '{1}')+abort")
+		_fzf_options+=(--bind "alt-enter:execute-silent($git_tmux_cmd new-window worktrees/$git_worktree_name -c '{1}')+abort")
 	fi
 
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split set by sourced git_core.sh
