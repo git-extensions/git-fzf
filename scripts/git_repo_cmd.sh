@@ -20,7 +20,7 @@ source "$_git_repo_cmd_source_dir/git_core.sh"
 # DESCRIPTION:
 #   Returns the projects directory using the following precedence:
 #     1. GIT_FZF_REPO_PATH environment variable
-#     2. git config --global git-fzf.repoPath
+#     2. git config --global fzf.repoDir
 #     3. ~/Projects (default)
 #   Tilde in the value is expanded to $HOME.
 #
@@ -38,19 +38,54 @@ _git_repo_projects_dir() {
 
 # _git_repo_cmd_list()
 #
-# List local git repositories under the configured projects directory.
+# Parse the projects directory and emit tab-separated rows.
 #
 # DESCRIPTION:
 #   Uses fd to scan 3 levels deep under the resolved projects directory.
-#   Emits one absolute path per line. No header, no colors — pure data.
+#   Emits one tab-separated line per repository:
+#       PATH\tREPOSITORY
+#   PATH is the absolute path. REPOSITORY is the path relative to the
+#   projects directory (e.g., github.com/org/myrepo).
+#   No colors, no header — pure data.
 #
 # RETURNS:
-#   One absolute path per line. Empty output if no repos found.
+#   Tab-separated rows (no header), one per repository. Empty output if
+#   no repositories found.
 #
 _git_repo_cmd_list() {
 	local dir
 	dir=$(_git_repo_projects_dir)
-	fd -t d --max-depth 3 --min-depth 3 . "$dir" 2>/dev/null | sed 's|/$||'
+
+	local prefix="${dir}/"
+
+	fd -t d --max-depth 3 --min-depth 3 . "$dir" 2>/dev/null | sed 's|/$||' | while IFS= read -r path; do
+		printf '%s\t%s\n' "$path" "${path#"$prefix"}"
+	done
+}
+
+# _git_repo_list_cmd()
+#
+# List git repositories with colored, formatted output.
+#
+# DESCRIPTION:
+#   Calls _git_repo_cmd_list to get raw TSV data, then renders it as an
+#   ANSI-colored table with a header suitable for fzf consumption.
+#
+# RETURNS:
+#   Colored table with header + one row per repository.
+#   Empty output (exit 0) when no repositories found.
+#
+_git_repo_list_cmd() {
+	local raw
+	raw=$(_git_repo_cmd_list)
+
+	[[ -z "$raw" ]] && return 0
+
+	printf '%s\n' "$raw" |
+		awk -v headers="PATH,REPOSITORY" \
+			-v styles="normal,bold" \
+			-v max_widths="50,0" \
+			-f "$_git_repo_cmd_source_dir/git_render.awk"
 }
 
 # _git_repo_preview_help()
@@ -76,10 +111,13 @@ main() {
 
 	case "$cmd" in
 	list)
-		_git_repo_cmd_list
+		_git_repo_list_cmd
 		;;
 	projects-dir)
 		_git_repo_projects_dir
+		;;
+	repo-name)
+		_git_repo_name "${2:-}"
 		;;
 	preview-help)
 		_git_repo_preview_help

@@ -20,14 +20,14 @@ source "$_git_repo_source_dir/git_core.sh"
 # DESCRIPTION:
 #   Displays a list of local git repositories under the configured projects
 #   directory in an interactive fuzzy finder (fzf). Prints the selected
-#   repository path to stdout on Enter.
+#   repository path to stdout on Enter as an absolute path.
 #
 # PARAMETERS:
 #   $@ - --help or -h shows usage; all other flags are ignored
 #
 # RETURNS:
-#   0   - Enter pressed; prints absolute path to stdout
-#   1   - Failure (no repos found or fd not available)
+#   0   - Enter pressed; prints tilde-compressed path to stdout
+#   1   - Failure (no repositories found)
 #   130 - ESC or Ctrl-C pressed (fzf standard exit code); nothing printed
 #
 # KEYBOARD SHORTCUTS:
@@ -53,16 +53,20 @@ EOF
 	local git_repo_cmd
 	git_repo_cmd="$_git_repo_source_dir/git_repo_cmd.sh"
 
+	local git_repo_list
+	git_repo_list=$("$git_repo_cmd" list)
+
+	if [[ -z "$git_repo_list" ]]; then
+		gum log --level error "No git repositories found."
+		return 1
+	fi
+
 	local projects_dir
 	projects_dir=$("$git_repo_cmd" projects-dir)
 
-	# Compute the fzf --with-nth field offset so only host/workspace/project is shown
-	# Projects dir depth + 2 gives the first slash-delimited field after the base path
-	local display_depth
-	display_depth=$(( $(printf '%s' "$projects_dir" | tr -cd '/' | wc -c) + 2 ))
+	local projects_dir_display="${projects_dir/#$HOME/\~}"
 
 	local git_repo_footer
-	local projects_dir_display="${projects_dir/#$HOME/\~}"
 	git_repo_footer="$_fzf_icon Repositories $_fzf_split $projects_dir_display"
 
 	# Build fzf options with user-provided flags
@@ -74,23 +78,20 @@ EOF
 		git_tmux_cmd="$_git_repo_source_dir/git_tmux_cmd.sh"
 
 		# shellcheck disable=SC2016
-		local repo_workspace='$(basename $(dirname {}))'
-		# shellcheck disable=SC2016
-		local repo_project='$(basename {})'
+		local repo_name='$(basename $(dirname {1}))/$(basename {1})'
 
-		_fzf_options+=(--bind "alt-W:execute-silent($git_tmux_cmd new-window $repo_workspace/$repo_project -c '{}')+abort")
-		_fzf_options+=(--bind "alt-S:execute-silent($git_tmux_cmd new-session $repo_workspace/$repo_project -c '{}')+abort")
+		_fzf_options+=(--bind "alt-W:execute-silent($git_tmux_cmd new-window $repo_name -c '{1}')+abort")
+		_fzf_options+=(--bind "alt-S:execute-silent($git_tmux_cmd new-session $repo_name -c '{1}')+abort")
 	fi
 
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split/_fzf_open set by sourced git_core.sh
-	"$git_repo_cmd" list | fzf "${_fzf_options[@]}" \
-		--delimiter='/' \
-		--with-nth="${display_depth}.." \
+	echo "$git_repo_list" | fzf "${_fzf_options[@]}" \
+		--accept-nth 1 \
 		--footer "$git_repo_footer" \
 		--preview-label " Keyboard Shortcuts " \
 		--preview "$git_repo_cmd preview-help" \
 		--bind "load:change-footer($git_repo_footer)" \
 		--bind "ctrl-r:change-footer($git_repo_footer $_fzf_split Reloading...)+reload($git_repo_cmd list)" \
-		--bind "ctrl-o:change-footer($git_repo_footer $_fzf_split Opening...)+execute($_fzf_open '{}')" \
+		--bind "ctrl-o:change-footer($git_repo_footer $_fzf_split Opening...)+execute($_fzf_open '{1}')" \
 		--bind "alt-h:toggle-preview"
 }
