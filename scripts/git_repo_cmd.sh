@@ -98,8 +98,6 @@ _git_repo_preview_help() {
 |-----|--------|
 | **`ctrl-o`** | Open directory in file manager |
 | **`ctrl-r`** | Reload list |
-| **`alt-s`** | New tmux session |
-| **`alt-w`** | New tmux window |
 | **`alt-h`** | Toggle help |
 | **`ESC`** | Exit (no output) |
 EOF
