@@ -71,7 +71,7 @@ _git_worktree_list() {
 	git_repo_path="~${git_repo_path#"$HOME"}"
 
 	local git_worktree_footer
-	git_worktree_footer="$_fzf_icon Git Worktree $_fzf_split $git_repo_path"
+	git_worktree_footer="$_fzf_icon Git Worktrees $_fzf_split $git_repo_path"
 
 	# Build fzf options with user-provided flags
 	_git_fzf_options "WORKTREE"
