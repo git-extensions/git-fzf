@@ -68,7 +68,7 @@ EOF
 	git_repo_path="~${git_repo_path#"$HOME"}"
 
 	local git_repo_footer
-	git_repo_footer="$_fzf_icon Repositories $_fzf_split $git_repo_path"
+	git_repo_footer="$_fzf_icon Git Repositories $_fzf_split $git_repo_path"
 
 	# Build fzf options with user-provided flags
 	_git_fzf_options "REPO"
