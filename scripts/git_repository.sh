@@ -33,7 +33,7 @@ source "$_git_repo_source_dir/git_repository_cmd.sh"
 # KEYBOARD SHORTCUTS:
 #   ctrl-o    - Open directory in file manager (open / xdg-open)
 #   ctrl-r    - Reload repository list
-#   alt-w     - Open repository in new tmux window
+#   alt-t     - Open repository in new tmux window
 #   alt-enter - Open repository in new tmux session
 #   alt-h     - Toggle preview (keyboard shortcuts)
 #
@@ -84,7 +84,7 @@ EOF
 		# shellcheck disable=SC2016
 		git_repo_name='$(basename $(dirname {1}))/$(basename {1})'
 
-		_fzf_options+=(--bind "alt-w:execute-silent($git_tmux_cmd new-window $git_repo_name -c '{1}')+abort")
+		_fzf_options+=(--bind "alt-t:execute-silent($git_tmux_cmd new-window $git_repo_name -c '{1}')+abort")
 		_fzf_options+=(--bind "alt-enter:execute-silent($git_tmux_cmd new-session $git_repo_name -c '{1}')+abort")
 	fi
 

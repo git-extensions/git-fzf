@@ -79,7 +79,7 @@ git fzf repository
 | -------- | ---------------------------------------------------------------- |
 | `ctrl-o`    | Open repository directory in file manager (`open` / `xdg-open`) |
 | `ctrl-r`    | Reload repository list                                           |
-| `alt-w`     | Open repository in a new tmux window *(requires tmux)*           |
+| `alt-t`     | Open repository in a new tmux window *(requires tmux)*           |
 | `alt-enter` | Open repository in a new tmux session *(requires tmux)*          |
 | `alt-h`     | Toggle keyboard shortcut preview                                 |
 | `ESC`       | Exit                                                             |
@@ -101,7 +101,7 @@ git fzf worktree
 | `ctrl-r`    | Reload worktree list                                          |
 | `alt-x`     | Remove selected worktree (`git worktree remove`)              |
 | `alt-p`     | Prune stale worktrees (`git worktree prune`) + reload         |
-| `alt-w`     | Open worktree in a new tmux window *(requires tmux)*          |
+| `alt-t`     | Open worktree in a new tmux window *(requires tmux)*          |
 | `alt-enter` | Open worktree in a new tmux session *(requires tmux)*         |
 | `alt-h`     | Toggle keyboard shortcut preview                              |
 | `ESC`       | Exit                                                          |
