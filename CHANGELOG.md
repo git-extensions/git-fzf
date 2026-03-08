@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0](https://github.com/git-extensions/git-fzf/compare/v0.2.0...v0.3.0) (2026-03-08)
+
+
+### Features
+
+* add tmux integration for worktree navigation ([0f6783e](https://github.com/git-extensions/git-fzf/commit/0f6783edfa6dcd71dc4c2bdf27a4fc915fc0384f))
+
+
+### Bug Fixes
+
+* align tests and dispatch with post-refactor code ([286be2c](https://github.com/git-extensions/git-fzf/commit/286be2c7b48219ede0cc035d43370007e483462b))
+* use execute-silent and +abort for tmux bindings in git_worktree.sh ([5882a85](https://github.com/git-extensions/git-fzf/commit/5882a85031f192e45071d5bdee11e6394f6a350f))
+* **worktree:** abort fzf after tmux command execution ([9d8f09c](https://github.com/git-extensions/git-fzf/commit/9d8f09ca1540bad93175d4402f12c74e8fbb83e1))
+
 ## [0.2.0](https://github.com/git-extensions/git-fzf/compare/v0.1.0...v0.2.0) (2026-03-07)
 
 
