@@ -4,3 +4,5 @@
 *~
 .direnv/
 .envrc
+.github/sessions
+.github/worktrees
