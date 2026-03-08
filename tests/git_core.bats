@@ -51,69 +51,33 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
-# _git_root
+# _git_repo_path
 # ---------------------------------------------------------------------------
 
-@test "_git_root returns repo root" {
+@test "_git_repo_path returns repo root" {
 	cd "$TEST_REPO"
 	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_root)
+	result=$(_git_repo_path)
 	# Expand ~ back to $HOME for comparison; resolve symlinks (macOS /var -> /private/var)
 	expanded="${result/#\~/$HOME}"
 	[ "$(realpath "$expanded")" = "$(realpath "$TEST_REPO")" ]
 }
 
-@test "_git_root returns empty string outside a git repo" {
+@test "_git_repo_path returns empty string outside a git repo" {
 	cd "$TEST_OUTSIDE"
 	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_root)
+	result=$(_git_repo_path)
 	[ -z "$result" ]
 }
 
-@test "_git_root returns non-empty string inside a bare repo" {
+@test "_git_repo_path returns non-empty string inside a bare repo" {
 	BARE_REPO=$(mktemp -d)
 	rmdir "$BARE_REPO"
 	git clone --bare "$TEST_REPO" "$BARE_REPO"
 	cd "$BARE_REPO"
 	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_root)
+	result=$(_git_repo_path)
 	[ -n "$result" ]
-}
-
-# ---------------------------------------------------------------------------
-# _git_expand_path
-# ---------------------------------------------------------------------------
-
-@test "_git_expand_path expands leading ~ to HOME" {
-	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_expand_path "~/foo/bar")
-	[ "$result" = "$HOME/foo/bar" ]
-}
-
-@test "_git_expand_path leaves absolute paths unchanged" {
-	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_expand_path "/tmp/foo")
-	[ "$result" = "/tmp/foo" ]
-}
-
-@test "_git_expand_path does not expand ~ in the middle of a path" {
-	source "$SCRIPTS_DIR/git_core.sh"
-	result=$(_git_expand_path "/foo/~/bar")
-	[ "$result" = "/foo/~/bar" ]
-}
-
-# ---------------------------------------------------------------------------
-# git_core.sh open dispatch
-# ---------------------------------------------------------------------------
-
-@test "git_core.sh open without path exits 1" {
-	run "$SCRIPTS_DIR/git_core.sh" open
-	[ "$status" -eq 1 ]
-}
-
-@test "git_core.sh open without path prints error to stderr" {
-	run --separate-stderr "$SCRIPTS_DIR/git_core.sh" open
-	echo "$stderr" | grep -q "requires a path"
 }
 
 # ---------------------------------------------------------------------------

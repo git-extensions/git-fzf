@@ -25,18 +25,6 @@ teardown() {
 	if [[ -n "${BARE_REPO:-}" ]]; then rm -rf "$BARE_REPO"; fi
 }
 
-# ---------------------------------------------------------------------------
-# default invocation — _git_worktree_list_cmd (colored table renderer)
-# ---------------------------------------------------------------------------
-
-@test "git_worktree_cmd.sh outputs a header line" {
-	cd "$TEST_REPO"
-	run "$CMD"
-	[ "$status" -eq 0 ]
-	# First line should be the header
-	echo "${lines[0]}" | grep -qi "PATH"
-}
-
 @test "git_worktree_cmd.sh lists main worktree path" {
 	cd "$TEST_REPO"
 	run "$CMD" list
@@ -53,7 +41,7 @@ teardown() {
 
 @test "git_worktree_cmd.sh shows branch name" {
 	cd "$TEST_REPO"
-	run "$CMD"
+	run "$CMD" list
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "wt-branch"
 }
@@ -71,53 +59,6 @@ teardown() {
 	run "$CMD" preview-help
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "ctrl-r"
-}
-
-# ---------------------------------------------------------------------------
-# prune subcommand
-# ---------------------------------------------------------------------------
-
-@test "prune subcommand exits 0" {
-	cd "$TEST_REPO"
-	run "$CMD" prune
-	[ "$status" -eq 0 ]
-}
-
-# ---------------------------------------------------------------------------
-# remove subcommand
-# ---------------------------------------------------------------------------
-
-@test "remove subcommand removes a worktree" {
-	cd "$TEST_REPO"
-	run "$CMD" remove "$TEST_REPO-wt"
-	[ "$status" -eq 0 ]
-	[ ! -d "$TEST_REPO-wt" ]
-}
-
-@test "remove subcommand expands ~/path before removing" {
-	# Re-create the worktree under a ~/... path if possible, otherwise use a
-	# symlink trick: just verify _git_expand_path is invoked by confirming that
-	# a tilde-prefixed path resolving to the same location works.
-	cd "$TEST_REPO"
-	local rel="${TEST_REPO-wt/#$HOME/\~}"
-	if [[ "$TEST_REPO-wt" == "$HOME/"* ]]; then
-		tilde_path="~${TEST_REPO-wt#"$HOME"}"
-		run "$CMD" remove "$tilde_path"
-		[ "$status" -eq 0 ]
-		[ ! -d "$TEST_REPO-wt" ]
-	else
-		skip "TEST_REPO not under HOME; tilde expansion not exercisable"
-	fi
-}
-
-@test "remove subcommand without path exits 1" {
-	run "$CMD" remove
-	[ "$status" -eq 1 ]
-}
-
-@test "remove subcommand without path prints error to stderr" {
-	run --separate-stderr "$CMD" remove
-	echo "$stderr" | grep -q "requires a worktree path"
 }
 
 # ---------------------------------------------------------------------------
