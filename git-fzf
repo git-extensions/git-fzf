@@ -17,7 +17,8 @@ _git_fzf_source_dir=$(
 
 # Verify required dependencies are installed
 #
-# Checks that Bash 4.4+, git, fzf, and gum are available.
+# Checks that Bash 4.4+, git, fzf, and gum are available, plus any
+# additional tools passed as positional arguments (e.g. fd).
 # Prints installation instructions and exits if any are missing.
 _check_dependencies() {
 	if [[ "${BASH_VERSINFO[0]}" -lt 4 || ("${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -lt 4) ]]; then
@@ -38,6 +39,16 @@ _check_dependencies() {
 		missing+=("gum     — https://github.com/charmbracelet/gum")
 	fi
 
+	local dep
+	for dep in "$@"; do
+		if ! command -v "$dep" &>/dev/null; then
+			case "$dep" in
+			fd) missing+=("fd      — https://github.com/sharkdp/fd") ;;
+			*) missing+=("$dep") ;;
+			esac
+		fi
+	done
+
 	if [[ ${#missing[@]} -gt 0 ]]; then
 		echo "git-fzf: missing required dependencies:" >&2
 		for dep in "${missing[@]}"; do
@@ -47,18 +58,9 @@ _check_dependencies() {
 	fi
 }
 
-# Verify fd is installed (required for 'repo' command only)
-_check_fd_dependency() {
-	if ! command -v fd &>/dev/null; then
-		echo "git-fzf: 'repo' command requires fd" >&2
-		echo "  fd — https://github.com/sharkdp/fd" >&2
-		exit 1
-	fi
-}
-
 # Source command modules
 source "$_git_fzf_source_dir/scripts/git_worktree.sh"
-source "$_git_fzf_source_dir/scripts/git_repo.sh"
+source "$_git_fzf_source_dir/scripts/git_repository.sh"
 
 # Help function
 #
@@ -125,12 +127,12 @@ ENVIRONMENT VARIABLES:
 
 COMMANDS:
     worktree    Browse and interact with Git worktrees
-    repo        Browse and navigate local git repositories
+    repository  Browse and navigate local git repositories (alias: repo)
 
 EXAMPLES:
     # Basic usage
     git fzf worktree                    # Browse worktrees interactively
-    git fzf repo                        # Browse local repositories
+    git fzf repository                  # Browse local repositories
 
     # With fzf flags (tmux popup)
     git fzf --tmux worktree             # Open in tmux popup (default size)
@@ -139,7 +141,7 @@ EXAMPLES:
 
 DEBUG:
     DEBUG=1 git fzf worktree            # Enable debug trace
-    DEBUG=1 git fzf repo                # Enable debug trace
+    DEBUG=1 git fzf repository          # Enable debug trace
 EOF
 }
 
@@ -198,9 +200,8 @@ main() {
 		_check_dependencies
 		_git_worktree_list "${cmd_args[@]}"
 		;;
-	repo)
-		_check_dependencies
-		_check_fd_dependency
+	repository | repo)
+		_check_dependencies fd
 		_git_repo_list "${cmd_args[@]}"
 		;;
 	*)

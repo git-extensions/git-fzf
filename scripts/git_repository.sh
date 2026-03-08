@@ -5,10 +5,10 @@
 set -euo pipefail
 
 _git_repo_source_dir=$(dirname "${BASH_SOURCE[0]}")
-# shellcheck source=./git_repo_cmd.sh
-source "$_git_repo_source_dir/git_repo_cmd.sh"
+# shellcheck source=./git_repository_cmd.sh
+source "$_git_repo_source_dir/git_repository_cmd.sh"
 
-# git_repo.sh - Git Repository interactive browser for git-fzf
+# git_repository.sh - Git Repository interactive browser for git-fzf
 #
 # This file is sourced by the main git-fzf script and provides
 # the interactive repository browser functionality.
@@ -53,7 +53,7 @@ EOF
 	fi
 
 	local git_repo_cmd
-	git_repo_cmd="$_git_repo_source_dir/git_repo_cmd.sh"
+	git_repo_cmd="$_git_repo_source_dir/git_repository_cmd.sh"
 
 	local git_repo_list
 	git_repo_list=$("$git_repo_cmd" list)
@@ -93,7 +93,7 @@ EOF
 		--accept-nth 1 --with-nth 2.. \
 		--footer "$git_repo_footer" \
 		--preview-label " Keyboard Shortcuts " \
-		--preview "$_git_repo_source_dir/git_repo_cmd.sh preview-help" \
+		--preview "$_git_repo_source_dir/git_repository_cmd.sh preview-help" \
 		--bind "load:change-footer($git_repo_footer)" \
 		--bind "ctrl-r:change-footer($git_repo_footer $_fzf_split Reloading...)+reload($git_repo_cmd)" \
 		--bind "ctrl-o:change-footer($git_repo_footer $_fzf_split Opening...)+execute($_fzf_open '{1}')" \

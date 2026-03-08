@@ -8,9 +8,9 @@ _git_repo_cmd_source_dir=$(dirname "${BASH_SOURCE[0]}")
 # shellcheck source=./git_core.sh
 source "$_git_repo_cmd_source_dir/git_core.sh"
 
-# git_repo_cmd.sh - Git Repository commands for git-fzf
+# git_repository_cmd.sh - Git Repository commands for git-fzf
 #
-# Invoked as a subprocess by git_repo.sh. Provides repository
+# Invoked as a subprocess by git_repository.sh. Provides repository
 # data emission and fzf action dispatch (list, preview-help).
 
 # _git_config_repo_path()

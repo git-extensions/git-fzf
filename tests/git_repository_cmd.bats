@@ -1,11 +1,11 @@
 #!/usr/bin/env bats
 
-# git_repo_cmd.bats — unit tests for scripts/git_repo_cmd.sh
+# git_repository_cmd.bats — unit tests for scripts/git_repository_cmd.sh
 
 bats_require_minimum_version 1.5.0
 
 SCRIPTS_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")/../scripts" && pwd)"
-CMD="$SCRIPTS_DIR/git_repo_cmd.sh"
+CMD="$SCRIPTS_DIR/git_repository_cmd.sh"
 
 setup() {
 	# Create a fake projects directory tree: Projects/github.com/org/repo

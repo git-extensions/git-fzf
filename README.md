@@ -9,7 +9,7 @@ directories, and manage stale branches — without leaving the terminal.
 - [Bash](https://www.gnu.org/software/bash/) 4.4+ — `brew install bash` (macOS ships 3.x)
 - [fzf](https://github.com/junegunn/fzf) — `brew install fzf`
 - [Gum](https://github.com/charmbracelet/gum) — `brew install gum`
-- [fd](https://github.com/sharkdp/fd) — `brew install fd` *(required for `repo` command)*
+- [fd](https://github.com/sharkdp/fd) — `brew install fd` *(required for `repository` command)*
 
 ## Installation
 
@@ -70,7 +70,7 @@ Browse local repositories under your configured projects directory. Selecting
 one and pressing **Enter** prints the path to stdout.
 
 ```bash
-git fzf repo
+git fzf repository
 ```
 
 ### Keybindings
@@ -110,7 +110,7 @@ git fzf worktree
 
 ### Repository path
 
-Set the root directory scanned by `git fzf repo` (default: `~/Projects`):
+Set the root directory scanned by `git fzf repository` (default: `~/Projects`):
 
 ```bash
 # git config (persistent)
@@ -170,7 +170,7 @@ Enable debug trace:
 
 ```bash
 DEBUG=1 git fzf worktree
-DEBUG=1 git fzf repo
+DEBUG=1 git fzf repository
 ```
 
 ## See Also
