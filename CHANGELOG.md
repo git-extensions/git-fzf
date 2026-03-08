@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0](https://github.com/git-extensions/git-fzf/compare/v0.4.0...v0.5.0) (2026-03-08)
+
+
+### Features
+
+* add git fzf repo command for local repository browsing ([8b6c2fa](https://github.com/git-extensions/git-fzf/commit/8b6c2fa924d16de9ca768492ce7ce8aec4f83921))
+* add zsh plugin for zinit installation ([ad99703](https://github.com/git-extensions/git-fzf/commit/ad997038a58c49ca661fd0438a014e9fb3de0b54))
+* bind enter/alt-enter to tmux session/window for repository and worktree ([8cbe3a1](https://github.com/git-extensions/git-fzf/commit/8cbe3a14ee0e91e5d8491b5cab742891f17670ec))
+* resolve repo dir from git config fzf.repoDir ([4f28ce7](https://github.com/git-extensions/git-fzf/commit/4f28ce73e95a95c7e9dcea34ae0dae45ea5ac554))
+
+
+### Bug Fixes
+
+* add fd to nix runtimeDeps and devShell for repo command ([681d470](https://github.com/git-extensions/git-fzf/commit/681d47003297f2cf1e6c546f2985baa3ebcee473))
+* recognize `repository` as a valid command name in argument parser ([9d8f6b7](https://github.com/git-extensions/git-fzf/commit/9d8f6b7a2408e0da9f141ad2052b7ba81a1d92e4))
+* remove tmux bindings from repo preview-help (matches worktree) ([58bea38](https://github.com/git-extensions/git-fzf/commit/58bea3899493a186f4904455e37f749a78c966e6))
+* replace alt-w with alt-t for tmux window bindings ([df5460c](https://github.com/git-extensions/git-fzf/commit/df5460cca263439c4a18002a0f64e254a2cc9eaf))
+* replace alt-W/alt-S with alt-w/alt-enter for tmux bindings ([1e0f907](https://github.com/git-extensions/git-fzf/commit/1e0f90742f1b5903ceee61bb7c29e74646468c21))
+* review fixes — prefix safety, fzf style, tmux help, shellcheck comment ([26c73be](https://github.com/git-extensions/git-fzf/commit/26c73be3f15cd3b03fdfcf9cacd689f09fd9484d))
+
 ## [0.4.0](https://github.com/git-extensions/git-fzf/compare/v0.3.0...v0.4.0) (2026-03-08)
 
 
