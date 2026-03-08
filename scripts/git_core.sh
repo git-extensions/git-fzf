@@ -91,6 +91,25 @@ _git_is_repo() {
 	git rev-parse --git-dir &>/dev/null
 }
 
+# Resolve the current repo's nameWithOwner (e.g. "owner/repo")
+#
+# Writes the result into the nameref; returns 1 and logs an error on failure.
+#
+# Usage: _gh_repo_name repo_ref
+_git_repo_name() {
+	local url
+	url=$(git -C "$1" remote get-url origin 2>/dev/null) || {
+		basename "$1"
+		return
+	}
+	url="${url%.git}"
+	if [[ "$url" =~ [:/]([^/:]+/[^/:]+)$ ]]; then
+		printf '%s' "${BASH_REMATCH[1]}"
+	else
+		basename "$1"
+	fi
+}
+
 # Resolve the git repository root directory
 #
 # Writes the result into the nameref; returns 1 and logs an error on failure.

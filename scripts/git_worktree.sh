@@ -52,30 +52,51 @@ _git_worktree_list() {
 	git_worktree_cmd="$_git_worktree_source_dir/git_worktree_cmd.sh"
 
 	local git_worktree_list
-	git_worktree_list=$("$git_worktree_cmd")
+	git_worktree_list=$("$git_worktree_cmd" list)
 
 	if [[ -z "$git_worktree_list" ]]; then
 		gum log --level error "No git worktrees found."
 		return 1
 	fi
 
+	git_worktree_cmd+=" list"
+	[ $# -gt 0 ] && git_worktree_cmd+="$(printf ' %q' "$@")"
+
 	local git_repo_path
 	git_repo_path=$(_git_repo_path)
 
+	local git_repo_name
+	git_repo_name="$(_git_repo_name "$git_repo_path")"
+
+	local git_worktree_footer
+	git_worktree_footer="$_fzf_icon Git Worktree $_fzf_split $git_repo_path"
+
 	# Build fzf options with user-provided flags
 	_git_fzf_options "WORKTREE"
+
+	# Register tmux bindings only when running inside a tmux session
+	if [[ -n "${TMUX:-}" ]]; then
+		local git_tmux_cmd
+		git_tmux_cmd="$_git_worktree_source_dir/git_tmux_cmd.sh"
+
+		local dir_basename
+		dir_basename="\$(basename {1})"
+
+		_fzf_options+=(--bind "alt-W:execute($git_tmux_cmd new-window worktrees/$dir_basename -c {1})")
+		_fzf_options+=(--bind "alt-S:execute($git_tmux_cmd new-session $git_repo_name/$dir_basename -c {1})")
+	fi
 
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split set by sourced git_core.sh
 	# Interactive worktree browser
 	echo "$git_worktree_list" | fzf "${_fzf_options[@]}" \
 		--accept-nth 1 \
-		--footer "$_fzf_icon Git Worktrees $_fzf_split $git_repo_path" \
+		--footer "$git_worktree_footer" \
 		--preview-label " Keyboard Shortcuts " \
-		--preview "$git_worktree_cmd preview-help" \
-		--bind "load:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_repo_path)" \
-		--bind "ctrl-r:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_repo_path $_fzf_split Reloading...)+reload($git_worktree_cmd)" \
-		--bind "ctrl-o:execute-silent($_fzf_open {1})+change-footer($_fzf_icon Git Worktrees $_fzf_split $git_repo_path)" \
-		--bind "alt-p:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_repo_path $_fzf_split Pruning...)+execute-silent($git_worktree_cmd prune)+reload($git_worktree_cmd)" \
-		--bind "alt-x:change-footer($_fzf_icon Git Worktrees $_fzf_split $git_repo_path $_fzf_split Removing...)+execute-silent($git_worktree_cmd remove {1})+reload($git_worktree_cmd)" \
+		--preview "$_git_worktree_source_dir/git_worktree_cmd.sh preview-help" \
+		--bind "load:change-footer($git_worktree_footer)" \
+		--bind "ctrl-r:change-footer($git_worktree_footer $_fzf_split Reloading...)+reload($git_worktree_cmd)" \
+		--bind "ctrl-o:change-footer($git_worktree_footer $_fzf_split Opening...)+execute-silent($_fzf_open {1})" \
+		--bind "alt-p:change-footer($git_worktree_footer $_fzf_split Pruning...)+execute-silent(git worktree prune)+reload($git_worktree_cmd)" \
+		--bind "alt-x:change-footer($git_worktree_footer $_fzf_split Removing...)+execute-silent(git worktree remove {1})+reload($git_worktree_cmd)" \
 		--bind "alt-h:toggle-preview"
 }

@@ -79,7 +79,11 @@ _git_worktree_cmd_list() {
 			bare=1
 		elif [[ -z "$line" && -n "$path" ]]; then
 			_git_worktree_flush_block "$path" "$branch" "$sha" "$detached" "$bare"
-			path=""; sha=""; branch=""; detached=0; bare=0
+			path=""
+			sha=""
+			branch=""
+			detached=0
+			bare=0
 		fi
 	done <<<"$worktrees"
 
@@ -102,8 +106,7 @@ _git_worktree_cmd_list() {
 #
 _git_worktree_list_cmd() {
 	local raw
-	raw=$(gum spin --title "Loading worktrees..." -- \
-		"$_git_worktree_cmd_source_dir/git_worktree_cmd.sh" list)
+	raw=$(_git_worktree_cmd_list)
 
 	[[ -z "$raw" ]] && return 0
 
@@ -143,31 +146,17 @@ EOF
 # When run directly (not sourced), dispatch to the appropriate function.
 # ------------------------------------------------------------------------------
 main() {
-	local subcommand="${1:-}"
+	local cmd="${1:-}"
 
-	case "$subcommand" in
+	case "$cmd" in
 	list)
-		_git_worktree_cmd_list
+		_git_worktree_list_cmd
 		;;
 	preview-help)
 		_git_worktree_preview_help
 		;;
-	remove)
-		shift
-		if [[ -z "${1:-}" ]]; then
-			gum log --level error "remove requires a worktree path"
-			exit 1
-		fi
-		git worktree remove "$(_git_expand_path "$1")" "${@:2}"
-		;;
-	prune)
-		git worktree prune
-		;;
-	"")
-		_git_worktree_list_cmd
-		;;
 	*)
-		gum log --level error "unknown subcommand '$subcommand'"
+		gum log --level error "unknown subcommand '$cmd'"
 		exit 1
 		;;
 	esac
