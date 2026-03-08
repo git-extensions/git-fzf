@@ -20,7 +20,7 @@ source "$_git_repo_cmd_source_dir/git_core.sh"
 # DESCRIPTION:
 #   Returns the projects directory using the following precedence:
 #     1. GIT_FZF_REPOSITORY_PATH environment variable
-#     2. git config --global fzf.repoPath
+#     2. git config --global fzf.repositoryPath
 #     3. ~/Projects (default)
 #   Tilde in the value is expanded to $HOME.
 #
@@ -30,7 +30,7 @@ source "$_git_repo_cmd_source_dir/git_core.sh"
 _git_config_repo_path() {
 	local dir="${GIT_FZF_REPOSITORY_PATH:-}"
 	if [[ -z "$dir" ]]; then
-		dir=$(git config --global fzf.repoPath 2>/dev/null || true)
+		dir=$(git config --global fzf.repositoryPath 2>/dev/null || true)
 	fi
 	dir="${dir:-$HOME/Projects}"
 	printf '%s' "${dir/#\~/$HOME}"

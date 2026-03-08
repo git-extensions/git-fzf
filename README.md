@@ -90,7 +90,7 @@ Set the root directory scanned by `git fzf repository` (default: `~/Projects`):
 
 ```bash
 # git config (persistent)
-git config --global fzf.repoPath ~/Work
+git config --global fzf.repositoryPath ~/Work
 
 # Environment variable (takes precedence over git config)
 export GIT_FZF_REPOSITORY_PATH=~/Work
