@@ -7,6 +7,9 @@
 #           -f git_render.awk
 #
 # PARAMETERS:
+#   headers     Comma-separated column header names (e.g. "PATH,BRANCH,COMMIT,MESSAGE").
+#               When set, awk emits the header as row 1; callers need not prepend it.
+#               When unset, the first line of stdin is treated as the header row.
 #   styles      Comma-separated style names, one per column:
 #                 bold    — bright/bold text
 #                 faint   — dimmed text
@@ -33,6 +36,16 @@ BEGIN {
     ncols  = 0
     n_styles = split(styles,     style_arr, ",")
     n_maxw   = split(max_widths, maxw_arr,  ",")
+    if (headers != "") {
+        nrows = 1
+        n = split(headers, hdr, ",")
+        for (i = 1; i <= n; i++) {
+            rows[1, i] = hdr[i]
+            w = length(hdr[i])
+            if (w > col_width[i]) col_width[i] = w
+        }
+        if (n > ncols) ncols = n
+    }
 }
 
 {

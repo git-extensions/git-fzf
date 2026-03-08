@@ -18,11 +18,11 @@ source "$_git_worktree_cmd_source_dir/git_core.sh"
 # Emit one tab-separated worktree row to stdout.
 #
 # PARAMETERS:
-#   $1 - absolute path
+#   $1 - absolute path (emitted as tilde-compressed ~/...)
 #   $2 - branch   $3 - sha7   $4 - commit subject
 #
 _git_worktree_emit_row() {
-	printf "%s\t%s\t%s\t%s\n" "$1" "${2:-HEAD}" "${3:-}" "${4:-}"
+	printf "%s\t%s\t%s\t%s\n" "${1/#$HOME/~}" "${2:-HEAD}" "${3:-}" "${4:-}"
 }
 
 # _git_worktree_flush_block()
@@ -110,11 +110,9 @@ _git_worktree_list_cmd() {
 
 	[[ -z "$raw" ]] && return 0
 
-	{
-		printf "PATH\tBRANCH\tCOMMIT\tMESSAGE\n"
-		printf '%s\n' "$raw"
-	} |
-		awk -v styles="bold,status,faint,faint" \
+	printf '%s\n' "$raw" |
+		awk -v headers="PATH,BRANCH,COMMIT,MESSAGE" \
+			-v styles="bold,status,faint,faint" \
 			-v max_widths="0,35,0,0" \
 			-f "$_git_worktree_cmd_source_dir/git_render.awk"
 }
@@ -150,7 +148,7 @@ main() {
 
 	case "$cmd" in
 	list)
-		_git_worktree_cmd_list
+		_git_worktree_list_cmd
 		;;
 	preview-help)
 		_git_worktree_preview_help

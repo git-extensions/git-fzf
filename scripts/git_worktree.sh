@@ -26,7 +26,7 @@ source "$_git_worktree_source_dir/git_core.sh"
 #   $@ - --help or -h shows 'git worktree list --help'; all other flags are ignored
 #
 # RETURNS:
-#   0   - Enter pressed; prints selected worktree path to stdout
+#   0   - Enter pressed; prints selected worktree path (tilde-compressed) to stdout
 #   1   - Failure (not in a git repo, or no worktrees found)
 #   130 - ESC or Ctrl-C pressed (fzf standard exit code); nothing printed
 #
@@ -67,6 +67,8 @@ _git_worktree_list() {
 
 	local git_repo_name
 	git_repo_name="$(_git_repo_name "$git_repo_path")"
+
+	git_repo_path="${git_repo_path/#$HOME/~}"
 
 	local git_worktree_footer
 	git_worktree_footer="$_fzf_icon Git Worktree $_fzf_split $git_repo_path"

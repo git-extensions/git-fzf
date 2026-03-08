@@ -76,16 +76,8 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
-# list subcommand — _git_worktree_cmd_list (raw TSV producer)
+# list subcommand — _git_worktree_list_cmd (formatted output for fzf)
 # ---------------------------------------------------------------------------
-
-@test "list subcommand emits tab-separated rows" {
-	cd "$TEST_REPO"
-	run "$CMD" list
-	[ "$status" -eq 0 ]
-	# Each row should contain at least one tab
-	echo "${lines[0]}" | grep -q $'\t'
-}
 
 @test "list subcommand includes main worktree path" {
 	cd "$TEST_REPO"
@@ -107,20 +99,6 @@ teardown() {
 	run "$CMD" list
 	[ "$status" -eq 0 ]
 	echo "$output" | grep -q "(detached)"
-}
-
-@test "list subcommand strips tabs from commit subject" {
-	# Commit with a tab in the subject
-	git -C "$TEST_REPO" commit --allow-empty -m $'subject\twith\ttabs'
-	cd "$TEST_REPO"
-	run "$CMD" list
-	[ "$status" -eq 0 ]
-	# Output must not contain a literal tab in the message field (4th field)
-	# We check that no row has more than 3 tabs (path, branch, sha, message = 3 separators)
-	while IFS= read -r row; do
-		count=$(printf '%s' "$row" | tr -cd '\t' | wc -c)
-		[ "$count" -le 3 ]
-	done <<<"$output"
 }
 
 @test "list subcommand shows (bare) for bare clone" {
