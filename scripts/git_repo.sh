@@ -62,7 +62,7 @@ EOF
 	fi
 
 	local git_repo_path
-	git_repo_path=$(_git_repo_dir)
+	git_repo_path=$(_git_config_repo_path)
 
 	git_repo_path="~${git_repo_path#"$HOME"}"
 
