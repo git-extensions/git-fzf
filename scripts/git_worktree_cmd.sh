@@ -150,7 +150,7 @@ main() {
 
 	case "$cmd" in
 	list)
-		_git_worktree_list_cmd
+		_git_worktree_cmd_list
 		;;
 	preview-help)
 		_git_worktree_preview_help
