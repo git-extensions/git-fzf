@@ -30,6 +30,16 @@ Or install into your profile:
 nix profile install github:git-extensions/git-fzf
 ```
 
+### Zsh Plugin
+
+The plugin adds `git-fzf` to your `$PATH` so git discovers it as a custom command (`git fzf`).
+
+> **Note:** Bash 4.4+ is still required. On macOS: `brew install bash`.
+
+```zsh
+zinit light git-extensions/git-fzf
+```
+
 ### Manual
 
 Symlink the `git-fzf` script onto your `$PATH` so git discovers it as a
