@@ -26,6 +26,12 @@ GIT_FZF="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)/git-fzf"
 	echo "$output" | grep -q "worktree"
 }
 
+@test "git-fzf --help mentions repo command" {
+	run "$GIT_FZF" --help
+	[ "$status" -eq 0 ]
+	echo "$output" | grep -q "repo"
+}
+
 @test "git-fzf with no recognised command shows help" {
 	run "$GIT_FZF" unknowncmd
 	[ "$status" -eq 0 ]
