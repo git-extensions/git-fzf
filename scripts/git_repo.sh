@@ -85,9 +85,10 @@ EOF
 		_fzf_options+=(--bind "alt-S:execute-silent($git_tmux_cmd new-session $git_repo_name -c '{1}')+abort")
 	fi
 
-	# shellcheck disable=SC2154
+	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split/_fzf_open set by sourced git_core.sh
 	echo "$git_repo_list" | fzf "${_fzf_options[@]}" \
-		--accept-nth 1 --with-nth 2.. \
+		--accept-nth 1 \
+		--with-nth 2.. \
 		--footer "$git_repo_footer" \
 		--preview-label " Keyboard Shortcuts " \
 		--preview "$git_repo_cmd preview-help" \

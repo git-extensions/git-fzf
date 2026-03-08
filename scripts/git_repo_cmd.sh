@@ -56,7 +56,7 @@ _git_repo_cmd_list() {
 	local dir
 	dir=$(_git_config_repo_path)
 
-	local prefix="${dir}/"
+	local prefix="${dir%/}/"
 
 	fd -t d --max-depth 3 --min-depth 3 . "$dir" 2>/dev/null | sed 's|/$||' | while IFS= read -r path; do
 		printf '%s\t%s\n' "$path" "${path#"$prefix"}"
@@ -98,6 +98,8 @@ _git_repo_preview_help() {
 |-----|--------|
 | **`ctrl-o`** | Open directory in file manager |
 | **`ctrl-r`** | Reload list |
+| **`alt-s`** | New tmux session |
+| **`alt-w`** | New tmux window |
 | **`alt-h`** | Toggle help |
 | **`ESC`** | Exit (no output) |
 EOF
