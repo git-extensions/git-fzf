@@ -88,10 +88,18 @@ Override fzf options per command via environment variables:
 
 Precedence: **Defaults** < **`GIT_FZF_FLAGS`** < **`GIT_FZF_WORKTREE_OPTS`**
 
+The format is the same as `FZF_DEFAULT_OPTS`: space-separated fzf options, with shell quoting for values that contain spaces or special characters.
+
 ```bash
-export GIT_FZF_WORKTREE_OPTS="--height 90%"
-# or
-export GIT_FZF_WORKTREE_OPTS="--tmux 80%,80%"
+# Simple flags
+export GIT_FZF_WORKTREE_OPTS="--height=90%"
+export GIT_FZF_WORKTREE_OPTS="--tmux=80%,80%"
+
+# Key bindings — quote the bind value
+export GIT_FZF_WORKTREE_OPTS="--bind 'alt-O:execute(code {})'"
+
+# Multiple options
+export GIT_FZF_WORKTREE_OPTS="--height=90% --bind 'alt-O:execute(code {})'"
 ```
 
 ## Development
