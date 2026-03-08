@@ -134,6 +134,8 @@ _git_worktree_preview_help() {
 | **`alt-x`** | Remove selected worktree |
 | **`alt-p`** | Prune stale worktrees |
 | **`alt-h`** | Toggle help |
+| **`alt-w`** | New tmux window *(tmux only)* |
+| **`alt-enter`** | New tmux session *(tmux only)* |
 | **`ESC`** | Exit (no output) |
 EOF
 }

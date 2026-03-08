@@ -77,12 +77,12 @@ git fzf repo
 
 | Key      | Action                                                           |
 | -------- | ---------------------------------------------------------------- |
-| `ctrl-o` | Open repository directory in file manager (`open` / `xdg-open`) |
-| `ctrl-r` | Reload repository list                                           |
-| `alt-s`  | Open repository in a new tmux session *(requires tmux)*          |
-| `alt-w`  | Open repository in a new tmux window *(requires tmux)*           |
-| `alt-h`  | Toggle keyboard shortcut preview                                 |
-| `ESC`    | Exit                                                             |
+| `ctrl-o`    | Open repository directory in file manager (`open` / `xdg-open`) |
+| `ctrl-r`    | Reload repository list                                           |
+| `alt-w`     | Open repository in a new tmux window *(requires tmux)*           |
+| `alt-enter` | Open repository in a new tmux session *(requires tmux)*          |
+| `alt-h`     | Toggle keyboard shortcut preview                                 |
+| `ESC`       | Exit                                                             |
 
 ## Worktrees
 
@@ -97,14 +97,14 @@ git fzf worktree
 
 | Key      | Action                                                        |
 | -------- | ------------------------------------------------------------- |
-| `ctrl-o` | Open worktree directory in file manager (`open` / `xdg-open`) |
-| `ctrl-r` | Reload worktree list                                          |
-| `alt-x`  | Remove selected worktree (`git worktree remove`)              |
-| `alt-p`  | Prune stale worktrees (`git worktree prune`) + reload         |
-| `alt-s`  | Open worktree in a new tmux session *(requires tmux)*         |
-| `alt-w`  | Open worktree in a new tmux window *(requires tmux)*          |
-| `alt-h`  | Toggle keyboard shortcut preview                              |
-| `ESC`    | Exit                                                          |
+| `ctrl-o`    | Open worktree directory in file manager (`open` / `xdg-open`) |
+| `ctrl-r`    | Reload worktree list                                          |
+| `alt-x`     | Remove selected worktree (`git worktree remove`)              |
+| `alt-p`     | Prune stale worktrees (`git worktree prune`) + reload         |
+| `alt-w`     | Open worktree in a new tmux window *(requires tmux)*          |
+| `alt-enter` | Open worktree in a new tmux session *(requires tmux)*         |
+| `alt-h`     | Toggle keyboard shortcut preview                              |
+| `ESC`       | Exit                                                          |
 
 ## Configuration
 
