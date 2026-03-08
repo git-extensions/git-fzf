@@ -56,6 +56,8 @@ EOF
 	local git_repo_list
 	git_repo_list=$("$git_repo_cmd" list)
 
+	git_repo_cmd+=" list"
+
 	if [[ -z "$git_repo_list" ]]; then
 		gum log --level error "No git repositories found."
 		return 1
@@ -63,7 +65,6 @@ EOF
 
 	local git_repo_path
 	git_repo_path=$(_git_config_repo_path)
-
 	git_repo_path="~${git_repo_path#"$HOME"}"
 
 	local git_repo_footer
@@ -87,13 +88,12 @@ EOF
 
 	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split/_fzf_open set by sourced git_core.sh
 	echo "$git_repo_list" | fzf "${_fzf_options[@]}" \
-		--accept-nth 1 \
-		--with-nth 2.. \
+		--accept-nth 1 --with-nth 2.. \
 		--footer "$git_repo_footer" \
 		--preview-label " Keyboard Shortcuts " \
-		--preview "$git_repo_cmd preview-help" \
+		--preview "$_git_repo_source_dir/git_repo_cmd.sh preview-help" \
 		--bind "load:change-footer($git_repo_footer)" \
-		--bind "ctrl-r:change-footer($git_repo_footer $_fzf_split Reloading...)+reload($git_repo_cmd list)" \
+		--bind "ctrl-r:change-footer($git_repo_footer $_fzf_split Reloading...)+reload($git_repo_cmd)" \
 		--bind "ctrl-o:change-footer($git_repo_footer $_fzf_split Opening...)+execute($_fzf_open '{1}')" \
 		--bind "alt-h:toggle-preview"
 }
