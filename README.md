@@ -9,7 +9,7 @@ directories, and manage stale branches — without leaving the terminal.
 - [Bash](https://www.gnu.org/software/bash/) 4.4+ — `brew install bash` (macOS ships 3.x)
 - [fzf](https://github.com/junegunn/fzf) — `brew install fzf`
 - [Gum](https://github.com/charmbracelet/gum) — `brew install gum`
-- [fd](https://github.com/sharkdp/fd) — `brew install fd` *(required for `repository` command)*
+- [fd](https://github.com/sharkdp/fd) — `brew install fd` *(required for `repo` command)*
 
 ## Installation
 
@@ -18,7 +18,7 @@ directories, and manage stale branches — without leaving the terminal.
 Run directly without installing:
 
 ```bash
-nix run github:git-extensions/git-fzf -- repository
+nix run github:git-extensions/git-fzf -- repo
 ```
 
 Or install into your profile:
@@ -59,9 +59,9 @@ git fzf --help
 Pass any fzf flags before the command — they are forwarded directly:
 
 ```bash
-git fzf --tmux repository            # open in a tmux popup
-git fzf --tmux "80%,80%" repository  # custom popup size
-git fzf --height 50% repository      # fixed height
+git fzf --tmux repo            # open in a tmux popup
+git fzf --tmux "80%,80%" repo  # custom popup size
+git fzf --height 50% repo      # fixed height
 ```
 
 ## Repositories
@@ -70,7 +70,7 @@ Browse local repositories under your configured projects directory. Selecting
 one and pressing **Enter** prints the path to stdout.
 
 ```bash
-git fzf repository
+git fzf repo
 ```
 
 ### Keybindings
@@ -86,14 +86,14 @@ git fzf repository
 
 ### Configuration
 
-Set the root directory scanned by `git fzf repository` (default: `~/Projects`):
+Set the root directory scanned by `git fzf repo` (default: `~/Projects`):
 
 ```bash
 # git config (persistent)
 git config --global fzf.repoPath ~/Work
 
 # Environment variable (takes precedence over git config)
-export GIT_FZF_REPOSITORY_PATH=~/Work
+export GIT_FZF_REPO_PATH=~/Work
 ```
 
 ## Worktrees
@@ -127,7 +127,7 @@ Override fzf options per command via environment variables:
 | Variable                | Scope            | Description                            |
 | ----------------------- | ---------------- | -------------------------------------- |
 | `GIT_FZF_FLAGS`         | All commands     | Set automatically from CLI fzf flags   |
-| `GIT_FZF_REPOSITORY_OPTS`     | Repository only  | Override any fzf option for repos      |
+| `GIT_FZF_REPO_OPTS`           | Repository only  | Override any fzf option for repos      |
 | `GIT_FZF_WORKTREE_OPTS` | Worktree only    | Override any fzf option for worktrees  |
 
 Precedence: **Defaults** < **`GIT_FZF_FLAGS`** < **`GIT_FZF_<COMMAND>_OPTS`**
@@ -169,7 +169,7 @@ shellcheck -x --source-path=SCRIPTDIR git-fzf scripts/*.sh
 Enable debug trace:
 
 ```bash
-DEBUG=1 git fzf repository
+DEBUG=1 git fzf repo
 DEBUG=1 git fzf worktree
 ```
 

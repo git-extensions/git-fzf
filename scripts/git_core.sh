@@ -5,7 +5,7 @@
 set -euo pipefail
 
 # Icon used in fzf footer/header titles
-_fzf_icon=" "
+_fzf_icon=" "
 # Separator used in fzf display templates
 _fzf_split="·"
 
@@ -55,8 +55,8 @@ _git_fzf_options() {
 		--header-border='sharp'
 		--footer-border='sharp'
 		--input-border='sharp'
-		--color='header:blue'
-		--color='footer:blue'
+		--color='header:red'
+		--color='footer:red'
 		--layout='reverse-list'
 		--preview-window='right:40:wrap:hidden:border-top'
 	)

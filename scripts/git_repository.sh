@@ -46,8 +46,8 @@ USAGE:
     git fzf repo
 
 ENVIRONMENT:
-    GIT_FZF_REPOSITORY_PATH    Root directory to scan for repos (default: ~/Projects)
-    GIT_FZF_REPOSITORY_OPTS    Per-command fzf options
+    GIT_FZF_REPO_PATH    Root directory to scan for repos (default: ~/Projects)
+    GIT_FZF_REPO_OPTS    Per-command fzf options
 EOF
 		return
 	fi
@@ -73,7 +73,7 @@ EOF
 	git_repo_footer="$_fzf_icon Git Repositories $_fzf_split $git_repo_path"
 
 	# Build fzf options with user-provided flags
-	_git_fzf_options "REPOSITORY"
+	_git_fzf_options "REPO"
 
 	# Register tmux bindings only when running inside a tmux session
 	if [[ -n "${TMUX:-}" ]]; then
