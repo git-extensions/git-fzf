@@ -13,7 +13,7 @@ source "$_git_repo_cmd_source_dir/git_core.sh"
 # Invoked as a subprocess by git_repo.sh. Provides repository
 # data emission and fzf action dispatch (list, preview-help).
 
-# _git_repo_projects_dir()
+# _git_repo_dir()
 #
 # Resolve the configured projects root directory.
 #
@@ -27,7 +27,7 @@ source "$_git_repo_cmd_source_dir/git_core.sh"
 # RETURNS:
 #   Absolute path to the projects directory (no trailing slash).
 #
-_git_repo_projects_dir() {
+_git_repo_dir() {
 	local dir="${GIT_FZF_REPO_PATH:-}"
 	if [[ -z "$dir" ]]; then
 		dir=$(git config --global fzf.repoDir 2>/dev/null || true)
@@ -54,7 +54,7 @@ _git_repo_projects_dir() {
 #
 _git_repo_cmd_list() {
 	local dir
-	dir=$(_git_repo_projects_dir)
+	dir=$(_git_repo_dir)
 
 	local prefix="${dir}/"
 
