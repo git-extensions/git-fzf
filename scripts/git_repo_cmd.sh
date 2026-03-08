@@ -113,12 +113,6 @@ main() {
 	list)
 		_git_repo_list_cmd
 		;;
-	projects-dir)
-		_git_repo_projects_dir
-		;;
-	repo-name)
-		_git_repo_name "${2:-}"
-		;;
 	preview-help)
 		_git_repo_preview_help
 		;;

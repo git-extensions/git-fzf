@@ -5,8 +5,8 @@
 set -euo pipefail
 
 _git_repo_source_dir=$(dirname "${BASH_SOURCE[0]}")
-# shellcheck source=./git_core.sh
-source "$_git_repo_source_dir/git_core.sh"
+# shellcheck source=./git_repo_cmd.sh
+source "$_git_repo_source_dir/git_repo_cmd.sh"
 
 # git_repo.sh - Git Repository interactive browser for git-fzf
 #
@@ -61,13 +61,13 @@ EOF
 		return 1
 	fi
 
-	local projects_dir
-	projects_dir=$("$git_repo_cmd" projects-dir)
+	local git_repo_path
+	git_repo_path=$(_git_repo_projects_dir)
 
-	local projects_dir_display="${projects_dir/#$HOME/\~}"
+	git_repo_path="~${git_repo_path#"$HOME"}"
 
 	local git_repo_footer
-	git_repo_footer="$_fzf_icon Repositories $_fzf_split $projects_dir_display"
+	git_repo_footer="$_fzf_icon Repositories $_fzf_split $git_repo_path"
 
 	# Build fzf options with user-provided flags
 	_git_fzf_options "REPO"
@@ -77,14 +77,15 @@ EOF
 		local git_tmux_cmd
 		git_tmux_cmd="$_git_repo_source_dir/git_tmux_cmd.sh"
 
+		local git_repo_name
 		# shellcheck disable=SC2016
-		local repo_name='$(basename $(dirname {1}))/$(basename {1})'
+		git_repo_name='$(basename $(dirname {1}))/$(basename {1})'
 
-		_fzf_options+=(--bind "alt-W:execute-silent($git_tmux_cmd new-window $repo_name -c '{1}')+abort")
-		_fzf_options+=(--bind "alt-S:execute-silent($git_tmux_cmd new-session $repo_name -c '{1}')+abort")
+		_fzf_options+=(--bind "alt-W:execute-silent($git_tmux_cmd new-window $git_repo_name -c '{1}')+abort")
+		_fzf_options+=(--bind "alt-S:execute-silent($git_tmux_cmd new-session $git_repo_name -c '{1}')+abort")
 	fi
 
-	# shellcheck disable=SC2154  # _fzf_options/_fzf_icon/_fzf_split/_fzf_open set by sourced git_core.sh
+	# shellcheck disable=SC2154
 	echo "$git_repo_list" | fzf "${_fzf_options[@]}" \
 		--accept-nth 1 \
 		--footer "$git_repo_footer" \
