@@ -87,8 +87,7 @@ EOF
 
 	# shellcheck disable=SC2154
 	echo "$git_repo_list" | fzf "${_fzf_options[@]}" \
-		--accept-nth 1 \
-		--with-nth 2.. \
+		--accept-nth 1 --with-nth 2.. \
 		--footer "$git_repo_footer" \
 		--preview-label " Keyboard Shortcuts " \
 		--preview "$git_repo_cmd preview-help" \
