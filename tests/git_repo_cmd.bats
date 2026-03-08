@@ -55,6 +55,26 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
+# repo-name subcommand
+# ---------------------------------------------------------------------------
+
+@test "repo-name returns basename for non-git directory" {
+	run "$CMD" repo-name "$TEST_REPO"
+	[ "$status" -eq 0 ]
+	[ "$output" = "myrepo" ]
+}
+
+@test "repo-name returns owner/repo from remote URL" {
+	NAMED_REPO=$(mktemp -d)
+	git -C "$NAMED_REPO" init -q
+	git -C "$NAMED_REPO" remote add origin "git@github.com:org/myproject.git"
+	run "$CMD" repo-name "$NAMED_REPO"
+	rm -rf "$NAMED_REPO"
+	[ "$status" -eq 0 ]
+	[ "$output" = "org/myproject" ]
+}
+
+# ---------------------------------------------------------------------------
 # list subcommand
 # ---------------------------------------------------------------------------
 
