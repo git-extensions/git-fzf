@@ -60,7 +60,7 @@ _check_dependencies() {
 
 # Source command modules
 source "$_git_fzf_source_dir/scripts/git_worktree.sh"
-source "$_git_fzf_source_dir/scripts/git_repository.sh"
+source "$_git_fzf_source_dir/scripts/git_repo.sh"
 
 # Help function
 #
