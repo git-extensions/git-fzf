@@ -84,7 +84,6 @@ _git_repo_list_cmd() {
 	printf '%s\n' "$raw" |
 		awk -v headers="PATH,REPOSITORY" \
 			-v styles="normal,bold" \
-			-v max_widths="50,0" \
 			-f "$_git_repo_cmd_source_dir/git_render.awk"
 }
 
