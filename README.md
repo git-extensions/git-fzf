@@ -3,13 +3,20 @@
 A fuzzy finder for Git. Browse local repositories, jump between worktrees, open
 directories, and manage stale branches — without leaving the terminal.
 
-## Prerequisites
+## Requirements
 
-- [Git](https://git-scm.com/) — `brew install git`
-- [Bash](https://www.gnu.org/software/bash/) 4.4+ — `brew install bash` (macOS ships 3.x)
-- [fzf](https://github.com/junegunn/fzf) — `brew install fzf`
-- [Gum](https://github.com/charmbracelet/gum) — `brew install gum`
-- [fd](https://github.com/sharkdp/fd) — `brew install fd` *(required for `repo` command)*
+- [Bash](https://www.gnu.org/software/bash/) 4.4+ (`bash`)
+- [fzf](https://github.com/junegunn/fzf) (`fzf`)
+- [Gum](https://github.com/charmbracelet/gum) (`gum`)
+- [fd](https://github.com/sharkdp/fd) (`fd`) _(required for `repo` command)_
+
+**macOS (Homebrew):**
+
+```bash
+brew install bash fzf gum fd
+```
+
+_(nix included with profile install)_
 
 ## Installation
 
