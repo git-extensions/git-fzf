@@ -16,7 +16,11 @@ directories, and manage stale branches — without leaving the terminal.
 brew install bash fzf gum fd
 ```
 
-_(nix included with profile install)_
+**Nix:**
+
+```bash
+nix profile install nixpkgs#bash nixpkgs#fzf nixpkgs#gum nixpkgs#fd
+```
 
 ## Installation
 
