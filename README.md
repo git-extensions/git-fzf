@@ -123,6 +123,7 @@ git fzf worktree
 | `ctrl-o`    | Open worktree directory in file manager (`open` / `xdg-open`) |
 | `ctrl-r`    | Reload worktree list                                          |
 | `alt-x`     | Remove selected worktree (`git worktree remove`)              |
+| `alt-X`     | Force-remove selected worktree (`git worktree remove -f`)     |
 | `alt-p`     | Prune stale worktrees (`git worktree prune`) + reload         |
 | `enter`     | Open worktree in a new tmux session *(requires tmux)*         |
 | `alt-enter` | Open worktree in a new tmux window *(requires tmux)*          |

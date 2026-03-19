@@ -132,6 +132,7 @@ _git_worktree_preview_help() {
 | **`ctrl-o`** | Open directory in file manager |
 | **`ctrl-r`** | Reload list |
 | **`alt-x`** | Remove selected worktree |
+| **`alt-X`** | Force-remove selected worktree |
 | **`alt-p`** | Prune stale worktrees |
 | **`alt-h`** | Toggle help |
 | **`enter`** | New tmux session *(tmux only)* |

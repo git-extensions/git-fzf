@@ -36,6 +36,7 @@ source "$_git_worktree_source_dir/git_core.sh"
 #   enter     - Open worktree in new tmux session (tmux only)
 #   alt-enter - Open worktree in new tmux window (tmux only)
 #   alt-x     - Remove selected worktree
+#   alt-X     - Force-remove selected worktree
 #   alt-p     - Prune stale worktrees + reload
 #   alt-h     - Toggle preview (keyboard shortcuts)
 #
