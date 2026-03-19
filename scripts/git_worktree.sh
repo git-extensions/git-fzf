@@ -103,5 +103,6 @@ _git_worktree_list() {
 		--bind "ctrl-o:change-footer($git_worktree_footer $_fzf_split Opening...)+execute(open '{1}')" \
 		--bind "alt-p:change-footer($git_worktree_footer $_fzf_split Pruning...)+execute-silent(git worktree prune)+reload($git_worktree_cmd)" \
 		--bind "alt-x:change-footer($git_worktree_footer $_fzf_split Removing...)+execute-silent(git worktree remove '{1}')+reload($git_worktree_cmd)" \
+		--bind "alt-X:change-footer($git_worktree_footer $_fzf_split Removing...)+execute-silent(git worktree remove -f '{1}')+reload($git_worktree_cmd)" \
 		--bind "alt-h:toggle-preview"
 }
