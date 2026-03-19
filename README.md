@@ -184,9 +184,12 @@ DEBUG=1 git fzf repo
 DEBUG=1 git fzf worktree
 ```
 
-## See Also
+## The git-extensions Ecosystem
 
-- [git-ai](https://github.com/git-extensions/git-ai) — AI-powered commit messages for git
+| Repo | What it provides |
+|------|-----------------|
+| [git-ai](https://github.com/git-extensions/git-ai) | AI-powered commit messages for git |
+| **git-fzf** ← you are here | Fuzzy finder for git |
 
 ## License
 
