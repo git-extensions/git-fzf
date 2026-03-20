@@ -46,6 +46,7 @@
         };
 
         devShells.default = pkgs.mkShell {
+          name = "git-fzf";
           packages = with pkgs; [
             bash
             git
