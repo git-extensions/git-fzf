@@ -3,6 +3,8 @@
 A fuzzy finder for Git. Browse local repositories, jump between worktrees, open
 directories, and manage stale branches — without leaving the terminal.
 
+[![CI](https://github.com/git-extensions/git-fzf/actions/workflows/test.yml/badge.svg)](https://github.com/git-extensions/git-fzf/actions/workflows/test.yml)
+
 ## Requirements
 
 - [Bash](https://www.gnu.org/software/bash/) 4.4+ (`bash`)
