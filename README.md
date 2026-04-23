@@ -2,7 +2,7 @@
 
 > A fuzzy finder for Git. Browse local repositories, jump between worktrees, open directories, and manage stale branches — without leaving the terminal.
 
-[![CI](https://github.com/git-extensions/git-fzf/actions/workflows/test.yml/badge.svg)](https://github.com/git-extensions/git-fzf/actions/workflows/test.yml)
+[![CI](https://github.com/git-extensions/git-fzf/actions/workflows/ci.yml/badge.svg)](https://github.com/git-extensions/git-fzf/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/git-extensions/git-fzf)](https://github.com/git-extensions/git-fzf/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
