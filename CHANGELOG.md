@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.2](https://github.com/git-extensions/git-fzf/compare/v0.7.1...v0.7.2) (2026-05-04)
+
+
+### Bug Fixes
+
+* **github:** correct action versions in update.yml ([850d10a](https://github.com/git-extensions/git-fzf/commit/850d10a85cf5d14349676eb2a9e2881ef99e510c))
+
 ## [0.7.1](https://github.com/git-extensions/git-fzf/compare/v0.7.0...v0.7.1) (2026-04-16)
 
 
