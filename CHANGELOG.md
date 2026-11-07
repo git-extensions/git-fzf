@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.3](https://github.com/git-extensions/git-fzf/compare/v0.7.2...v0.7.3) (2026-11-07)
+
+
+### Bug Fixes
+
+* **ci:** merge with the App token so main gets its CI run ([#48](https://github.com/git-extensions/git-fzf/issues/48)) ([c1eefaa](https://github.com/git-extensions/git-fzf/commit/c1eefaaee16b740e58cf9ae3a64fc8204e158138))
+
 ## [0.7.2](https://github.com/git-extensions/git-fzf/compare/v0.7.1...v0.7.2) (2026-05-04)
 
 
